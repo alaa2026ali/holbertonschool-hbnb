@@ -122,7 +122,7 @@ Stores and retrieves data from the database.
 
 ![High-Level Package Diagram](High-Level%20Package%20Diagram.drawio.png)
 
----
+
 
 ## 5. Detailed Class Diagram – Business Logic Layer
 
