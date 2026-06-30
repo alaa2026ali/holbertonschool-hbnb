@@ -1,82 +1,127 @@
-HBnB Evolution – Part 1
-Task 0: High-Level Package Diagram
-Project Overview
+# HBnB Project
 
-HBnB Evolution is a simplified Airbnb-inspired application developed as part of the Holberton School curriculum. The project is divided into multiple phases, each focusing on a different aspect of software engineering. Part 1 focuses on designing the system architecture using UML diagrams before moving on to implementation.
+## Project Objective: HBnB Evolution - Part 1
 
-The application enables users to register, manage properties, associate amenities with places, and submit reviews while following a modular and scalable software architecture.
+HBnB Evolution is a simplified Airbnb-inspired application designed to demonstrate software architecture and object-oriented design. The project prepares the system for future implementation by defining its structure, business logic, and relationships between components.
 
-Objective
+### Project Objectives
 
-The objective of Task 0 is to design a High-Level Package Diagram that represents the overall architecture of the HBnB application. The diagram provides a clear view of the system's organization by separating responsibilities into three independent layers.
+* Design a scalable and maintainable architecture.
+* Apply object-oriented programming principles.
+* Prepare the project for future REST API and database integration.
+* Build a solid foundation for the next development phases.
 
-This design improves maintainability, scalability, and readability while establishing a solid foundation for future development.
+---
 
-Three-Layer Architecture
+## Project Scope
 
-The application follows a Three-Layer Architecture, where each layer has a specific responsibility.
+HBnB Evolution allows users to:
 
-1. Presentation Layer
+* Register and manage user accounts.
+* Create and manage places.
+* Associate amenities with places.
+* Create and manage reviews.
 
-The Presentation Layer is responsible for handling user interactions. It receives requests from users, validates input, and returns responses. This layer communicates only with the Business Logic Layer.
+---
 
-Responsibilities
+## Business Rules and Requirements
 
-Handle user requests.
-Validate input data.
-Return application responses.
-Forward requests to the Business Logic Layer.
-2. Business Logic Layer
+### User Entity
 
-The Business Logic Layer contains the application's core functionality and business rules. It coordinates communication between the Presentation and Persistence layers using the Facade pattern.
+* First name
+* Last name
+* Email
+* Password
+* Administrator status
 
-Core Models
+**Operations**
 
-User
-Place
-Review
-Amenity
+* Create
+* Update
+* Delete
 
-Responsibilities
+### Place Entity
 
-Process application requests.
-Apply business rules.
-Manage relationships between entities.
-Coordinate data operations.
-3. Persistence Layer
+* Title
+* Description
+* Price
+* Latitude
+* Longitude
 
-The Persistence Layer manages data storage and retrieval. It is responsible for maintaining data integrity and performing CRUD operations.
+**Relationships**
 
-Responsibilities
+* Belongs to one User (Owner)
+* Can have multiple Amenities
 
-Store and retrieve data.
-Perform CRUD operations.
-Ensure data consistency.
-Provide data access to the Business Logic Layer.
-Layer Communication
+**Operations**
 
-The application follows a unidirectional communication flow:
+* Create
+* Update
+* Delete
+* List
 
-Presentation Layer
-        ↓
-Business Logic Layer
-        ↓
-Persistence Layer
+### Review Entity
 
-The Presentation Layer never communicates directly with the Persistence Layer. All interactions pass through the Business Logic Layer, which acts as the central coordinator of the application.
+* Rating
+* Comment
 
-Benefits of the Architecture
-Separation of concerns.
-Improved maintainability.
-Better scalability.
-Easier testing and debugging.
-Modular and reusable components.
-Clear communication between system layers.
-Deliverables
-High-Level Package Diagram (UML)
-UML source file (.drawio)
-Exported diagram (.png)
-Project documentation (README.md)
-Conclusion
+**Relationships**
 
-The High-Level Package Diagram establishes the architectural foundation of the HBnB application. By organizing the system into Presentation, Business Logic, and Persistence layers, the design promotes modularity, simplifies future development, and supports the implementation of a scalable and maintainable application.
+* Belongs to one User
+* Belongs to one Place
+
+**Operations**
+
+* Create
+* Update
+* Delete
+* List by Place
+
+### Amenity Entity
+
+* Name
+* Description
+
+**Operations**
+
+* Create
+* Update
+* Delete
+* List
+
+### General Rules
+
+* Every entity has a unique UUID.
+* All entities include creation and update timestamps.
+
+---
+
+## General Architecture
+
+The project follows a **three-layer architecture** using the **Facade Pattern** to simplify communication between components.
+
+## High-Level Package Diagram
+
+![High-Level Package Diagram](High-Level%20Package%20Diagram.drawio.png)
+
+### 1. Presentation Layer
+
+* Handles user interactions.
+* Receives requests and returns responses.
+
+### 2. Business Logic Layer
+
+* Contains the core models:
+
+  * User
+  * Place
+  * Review
+  * Amenity
+* Applies business rules.
+* Communicates with the Persistence Layer through the Facade.
+
+### 3. Persistence Layer
+
+* Manages data storage.
+* Performs CRUD operations.
+* Ensures data consistency.
