@@ -157,18 +157,19 @@ The following diagram illustrates the main entities in the Business Logic Layer,
 
 <img width="1071" height="689" alt="business_logic_class_diagram drawio" src="https://github.com/user-attachments/assets/ee3a251b-8991-4c8b-8f26-7a00f2ab4c95" />
 
+The class diagram illustrates the Business Logic Layer, including inheritance from BaseModel, entity attributes, operations, and relationships between User, Place, Review, and Amenity.
 
 ### BaseModel
 
 The BaseModel class is the parent class for all business entities. It provides common attributes and operations shared by every model in the application.
 
-Attributes
+### Attributes
 
 - UUID4 identifier (id)
 - Creation timestamp (created_at)
 - Last update timestamp (updated_at)
 
-Operations
+### Operations
 
 - Save
 - Update
