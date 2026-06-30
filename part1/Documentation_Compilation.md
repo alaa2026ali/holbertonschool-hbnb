@@ -128,8 +128,6 @@ Stores and retrieves data from the database.
 
 The following diagram illustrates the main entities in the Business Logic Layer and the relationships between them.
 
-> **Insert the Business Logic Class Diagram here (if available).**
-
 ### Main Entities and Relationships
 
 #### User
