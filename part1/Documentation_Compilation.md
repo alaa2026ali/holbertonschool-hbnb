@@ -126,29 +126,29 @@ Stores and retrieves data from the database.
 
 --- 
 
-5. Detailed Class Diagram – Business Logic Layer
+# 5. Detailed Class Diagram – Business Logic Layer
 The following diagram illustrates the main entities in the Business Logic Layer and the relationships between them.
 
 <img width="1071" height="689" alt="business_logic_class_diagram drawio (1)" src="https://github.com/user-attachments/assets/c754fb56-1624-4401-9093-5633232c6f70" />
 
-Main Entities and Relationships
-User: Owns places and writes reviews.
+## Main Entities and Relationships
+### User: Owns places and writes reviews.
 
-Place: Belongs to one user, can have amenities, and can receive reviews.
+### Place: Belongs to one user, can have amenities, and can receive reviews.
 
-Review: Belongs to one user and belongs to one place.
+### Review: Belongs to one user and belongs to one place.
 
-Amenity: Can be linked to many places.
+### Amenity: Can be linked to many places.
 
 The following section details the main entities in the Business Logic Layer, their attributes, methods, inheritance, and relationships.
 
-Business Logic Class Diagram
+## Business Logic Class Diagram
 The class diagram illustrates the Business Logic Layer, including inheritance from BaseModel, entity attributes, operations, and relationships between User, Place, Review, and Amenity.
 
-BaseModel
+## BaseModel
 The BaseModel class is the parent class for all business entities. It provides common attributes and operations shared by every model in the application to ensure data consistency and eliminate redundancy.
 
-Attributes:
+### Attributes:
 
 id (UUID4): Unique identifier for each entity instance.
 
@@ -156,7 +156,7 @@ created_at (datetime): Timestamp when the entity was created.
 
 updated_at (datetime): Timestamp when the entity was last updated.
 
-Operations:
+### Operations:
 
 save(): Persists the entity state.
 
@@ -164,10 +164,10 @@ update(dict kwargs): Updates the entity attributes dynamically.
 
 delete(): Removes the entity from the system.
 
-User
+## User
 Represents a registered user of the HBnB platform.
 
-Attributes:
+### Attributes:
 
 first_name (string)
 
@@ -179,16 +179,16 @@ password (string) - Private
 
 is_admin (bool)
 
-Operations:
+### Operations:
 
 register()
 
 login()
 
-Place
+## Place
 Represents a property listed on the platform.
 
-Attributes:
+### Attributes:
 
 title (string)
 
@@ -204,14 +204,14 @@ owner_id (string): Foreign Key linking to the User who owns the place.
 
 amenity_ids (list): List of Amenity IDs associated with this place.
 
-Operations:
+### Operations:
 
 (None - Inherits lifecycle operations from BaseModel)
 
-Review
+## Review
 Represents a review written by a user for a specific place.
 
-Attributes:
+### Attributes:
 
 rating (int)
 
@@ -221,33 +221,33 @@ place_id (string): Foreign Key linking to the reviewed Place.
 
 user_id (string): Foreign Key linking to the User who wrote the review.
 
-Operations:
+### Operations:
 
 (None - Inherits lifecycle operations from BaseModel)
 
-Amenity
+## Amenity
 Represents facilities or services available for a place.
 
-Attributes:
+### Attributes:
 
 name (string)
 
 description (string)
 
-Operations:
+### Operations:
 
 (None - Inherits lifecycle operations from BaseModel)
 
-Relationships
+## Relationships
 User → Place: One user can own multiple places. Each place belongs to one user.
 
-User → Review: One user can write multiple reviews. Each review belongs to one user.
+* **User → Review:** One user can write multiple reviews. Each review belongs to one user.
 
-Place → Review: One place can receive multiple reviews. Each review belongs to one place.
+* **Place → Review:** One place can receive multiple reviews. Each review belongs to one place.
 
-Place ↔ Amenity: A place can include multiple amenities. An amenity can be associated with multiple places (managed via amenity_ids).
+* **Place ↔ Amenity:** A place can include multiple amenities. An amenity can be associated with multiple places (managed via amenity_ids).
 
-Inheritance
+### Inheritance
 All entities inherit from the BaseModel class:
 
 User inherits from BaseModel.
