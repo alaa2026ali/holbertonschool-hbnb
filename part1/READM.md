@@ -125,3 +125,68 @@ The project follows a **three-layer architecture** using the **Facade Pattern** 
 * Manages data storage.
 * Performs CRUD operations.
 * Ensures data consistency.
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Sequence Diagrams for API Calls
+
+## Overview
+
+This task focuses on creating sequence diagrams for the main API calls in the HBnB application. The diagrams illustrate how requests move between the User, API, Business Logic, and Database to complete different operations within the system.
+
+---
+
+## User Registration
+
+![User Registration](User%20Registration.png)
+
+This diagram shows the process of creating a new user account. The request is received by the API, validated by the Business Logic layer, and then stored in the database if all the required conditions are met.
+
+---
+
+## Place Creation
+
+![Place Creation](Place%20Creation.png)
+
+This diagram illustrates how a user creates a new place listing. The system validates the request, checks the required information, and saves the new place in the database before returning the result.
+
+---
+
+## Review Submission
+
+![Review Submission](Review%20Submission.png)
+
+This diagram shows how a review is submitted for a place. The system validates the review, verifies the selected place, stores the review in the database, and returns the appropriate response.
+
+---
+
+## Fetching a List of Places
+
+![Fetching a List of Places](Fetching%20a%20List%20of%20Places.png)
+
+This diagram illustrates how users retrieve a list of places. The request is processed by the Business Logic layer, which retrieves the matching records from the database and returns them through the API.
+
+---
+
+## Tool Used
+
+- Mermaid
+
+---
+
+## Files
+
+- `User Registration.png`
+- `Place Creation.png`
+- `Review Submission.png`
+- `Fetching a List of Places.png`
