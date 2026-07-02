@@ -132,13 +132,13 @@ The following diagram illustrates the main entities in the Business Logic Layer 
 <img width="1071" height="689" alt="business_logic_class_diagram drawio (1)" src="https://github.com/user-attachments/assets/c754fb56-1624-4401-9093-5633232c6f70" />
 
 ## Main Entities and Relationships
-### User: Owns places and writes reviews.
+* **User:** Owns places and writes reviews.
 
-### Place: Belongs to one user, can have amenities, and can receive reviews.
+ * **Place:** Belongs to one user, can have amenities, and can receive reviews.
 
-### Review: Belongs to one user and belongs to one place.
+* **Review:** Belongs to one user and belongs to one place.
 
-### Amenity: Can be linked to many places.
+* **Amenity:** Can be linked to many places.
 
 The following section details the main entities in the Business Logic Layer, their attributes, methods, inheritance, and relationships.
 
@@ -148,61 +148,61 @@ The class diagram illustrates the Business Logic Layer, including inheritance fr
 ## BaseModel
 The BaseModel class is the parent class for all business entities. It provides common attributes and operations shared by every model in the application to ensure data consistency and eliminate redundancy.
 
-### Attributes:
+ ### Attributes:
 
-id (UUID4): Unique identifier for each entity instance.
+* id (UUID4): Unique identifier for each entity instance.
 
-created_at (datetime): Timestamp when the entity was created.
+* created_at (datetime): Timestamp when the entity was created.
 
-updated_at (datetime): Timestamp when the entity was last updated.
+* updated_at (datetime): Timestamp when the entity was last updated.
 
 ### Operations:
 
-save(): Persists the entity state.
+* save(): Persists the entity state.
 
-update(dict kwargs): Updates the entity attributes dynamically.
+* update(dict kwargs): Updates the entity attributes dynamically.
 
-delete(): Removes the entity from the system.
+* delete(): Removes the entity from the system.
 
 ## User
 Represents a registered user of the HBnB platform.
 
 ### Attributes:
 
-first_name (string)
+* first_name (string)
 
-last_name (string)
+* last_name (string)
 
-email (string)
+* email (string)
 
-password (string) - Private
+* password (string) - Private
 
-is_admin (bool)
+* is_admin (bool)
 
 ### Operations:
 
-register()
+* register()
 
-login()
+* login()
 
 ## Place
 Represents a property listed on the platform.
 
 ### Attributes:
 
-title (string)
+* title (string)
 
-description (string)
+* description (string)
 
-price (float)
+* price (float)
 
-latitude (float)
+* latitude (float)
 
-longitude (float)
+* longitude (float)
 
-owner_id (string): Foreign Key linking to the User who owns the place.
+* owner_id (string): Foreign Key linking to the User who owns the place.
 
-amenity_ids (list): List of Amenity IDs associated with this place.
+* amenity_ids (list): List of Amenity IDs associated with this place.
 
 ### Operations:
 
@@ -213,13 +213,13 @@ Represents a review written by a user for a specific place.
 
 ### Attributes:
 
-rating (int)
+* rating (int)
 
-comment (string)
+* comment (string)
 
-place_id (string): Foreign Key linking to the reviewed Place.
+* place_id (string): Foreign Key linking to the reviewed Place.
 
-user_id (string): Foreign Key linking to the User who wrote the review.
+* user_id (string): Foreign Key linking to the User who wrote the review.
 
 ### Operations:
 
@@ -230,9 +230,9 @@ Represents facilities or services available for a place.
 
 ### Attributes:
 
-name (string)
+* name (string)
 
-description (string)
+* description (string)
 
 ### Operations:
 
@@ -250,13 +250,13 @@ User → Place: One user can own multiple places. Each place belongs to one user
 ### Inheritance
 All entities inherit from the BaseModel class:
 
-User inherits from BaseModel.
+* User inherits from BaseModel.
 
-Place inherits from BaseModel.
+* Place inherits from BaseModel.
 
-Review inherits from BaseModel.
+* Review inherits from BaseModel.
 
-Amenity inherits from BaseModel.
+* Amenity inherits from BaseModel.
 
 This inheritance allows all entities to share the same identifier, timestamps, and common operations (save, update, delete) while strictly reducing code duplication and improving system maintainability.
 
