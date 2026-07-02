@@ -124,155 +124,142 @@ Stores and retrieves data from the database.
 
 
 
-## 5. Detailed Class Diagram – Business Logic Layer
+--- 
 
+5. Detailed Class Diagram – Business Logic Layer
 The following diagram illustrates the main entities in the Business Logic Layer and the relationships between them.
 
-### Main Entities and Relationships
+<img width="1071" height="689" alt="business_logic_class_diagram drawio (1)" src="https://github.com/user-attachments/assets/c754fb56-1624-4401-9093-5633232c6f70" />
 
-#### User
+Main Entities and Relationships
+User: Owns places and writes reviews.
 
-* Owns places.
-* Writes reviews.
+Place: Belongs to one user, can have amenities, and can receive reviews.
 
-#### Place
+Review: Belongs to one user and belongs to one place.
 
-* Belongs to one user.
-* Can have amenities.
-* Can receive reviews.
+Amenity: Can be linked to many places.
 
-#### Review
+The following section details the main entities in the Business Logic Layer, their attributes, methods, inheritance, and relationships.
 
-* Belongs to one user.
-* Belongs to one place.
-
-#### Amenity
-
-* Can be linked to many places.
-
-
-The following diagram illustrates the main entities in the Business Logic Layer, their attributes, methods, inheritance, and relationships.
-
-### Business Logic Class Diagram
-
-<img width="1071" height="689" alt="business_logic_class_diagram drawio" src="https://github.com/user-attachments/assets/ee3a251b-8991-4c8b-8f26-7a00f2ab4c95" />
-
+Business Logic Class Diagram
 The class diagram illustrates the Business Logic Layer, including inheritance from BaseModel, entity attributes, operations, and relationships between User, Place, Review, and Amenity.
 
-### BaseModel
+BaseModel
+The BaseModel class is the parent class for all business entities. It provides common attributes and operations shared by every model in the application to ensure data consistency and eliminate redundancy.
 
-The BaseModel class is the parent class for all business entities. It provides common attributes and operations shared by every model in the application.
+Attributes:
 
-### Attributes
+id (UUID4): Unique identifier for each entity instance.
 
-- UUID4 identifier (id)
-- Creation timestamp (created_at)
-- Last update timestamp (updated_at)
+created_at (datetime): Timestamp when the entity was created.
 
-### Operations
+updated_at (datetime): Timestamp when the entity was last updated.
 
-- Save
-- Update
-- Delete
+Operations:
 
-### User
+save(): Persists the entity state.
 
+update(dict kwargs): Updates the entity attributes dynamically.
+
+delete(): Removes the entity from the system.
+
+User
 Represents a registered user of the HBnB platform.
 
-Attributes
+Attributes:
 
-- First name
-- Last name
-- Email
-- Password
-- Administrator status
+first_name (string)
 
-Operations
+last_name (string)
 
-- Register
-- Login
-- Update profile
+email (string)
 
-### Place
+password (string) - Private
 
+is_admin (bool)
+
+Operations:
+
+register()
+
+login()
+
+Place
 Represents a property listed on the platform.
 
-Attributes
+Attributes:
 
-- Title
-- Description
-- Price
-- Latitude
-- Longitude
+title (string)
 
-Operations
+description (string)
 
-- Create
-- Update
-- Delete
+price (float)
 
-### Review
+latitude (float)
 
-Represents a review written by a user for a place.
+longitude (float)
 
-Attributes
+owner_id (string): Foreign Key linking to the User who owns the place.
 
-- Rating
-- Comment
+amenity_ids (list): List of Amenity IDs associated with this place.
 
-Operations
+Operations:
 
-- Create
-- Update
-- Delete
+(None - Inherits lifecycle operations from BaseModel)
 
-### Amenity
+Review
+Represents a review written by a user for a specific place.
 
+Attributes:
+
+rating (int)
+
+comment (string)
+
+place_id (string): Foreign Key linking to the reviewed Place.
+
+user_id (string): Foreign Key linking to the User who wrote the review.
+
+Operations:
+
+(None - Inherits lifecycle operations from BaseModel)
+
+Amenity
 Represents facilities or services available for a place.
 
-Attributes
+Attributes:
 
-- Name
-- Description
+name (string)
 
-Operations
+description (string)
 
-- Create
-- Update
-- Delete
+Operations:
 
-### Relationships
+(None - Inherits lifecycle operations from BaseModel)
 
-#### User → Place
+Relationships
+User → Place: One user can own multiple places. Each place belongs to one user.
 
-- One user can own multiple places.
-- Each place belongs to one user.
+User → Review: One user can write multiple reviews. Each review belongs to one user.
 
-#### User → Review
+Place → Review: One place can receive multiple reviews. Each review belongs to one place.
 
-- One user can write multiple reviews.
-- Each review belongs to one user.
+Place ↔ Amenity: A place can include multiple amenities. An amenity can be associated with multiple places (managed via amenity_ids).
 
-#### Place → Review
+Inheritance
+All entities inherit from the BaseModel class:
 
-- One place can receive multiple reviews.
-- Each review belongs to one place.
+User inherits from BaseModel.
 
-#### Place ↔ Amenity
+Place inherits from BaseModel.
 
-- A place can include multiple amenities.
-- An amenity can be associated with multiple places.
+Review inherits from BaseModel.
 
-### Inheritance
+Amenity inherits from BaseModel.
 
-All entities inherit from the BaseModel class.
+This inheritance allows all entities to share the same identifier, timestamps, and common operations (save, update, delete) while strictly reducing code duplication and improving system maintainability.
 
-- User inherits from BaseModel.
-- Place inherits from BaseModel.
-- Review inherits from BaseModel.
-- Amenity inherits from BaseModel.
-
-This inheritance allows all entities to share the same identifier, timestamps, and common operations while reducing code duplication and improving maintainability.
 
 ---
 
