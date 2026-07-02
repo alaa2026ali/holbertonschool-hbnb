@@ -126,17 +126,35 @@ The project follows a **three-layer architecture** using the **Facade Pattern** 
 * Performs CRUD operations.
 * Ensures data consistency.
 
+---
+# Business Logic Layer (Class Diagram)
+
+<img width="1071" height="689" alt="business_logic_class_diagram drawio (1)" src="https://github.com/user-attachments/assets/3b4e4ac5-4e27-42c2-8542-a88dad261cea" />
+
+This section outlines the core domain models designed for the HBnB Evolution application. All business entities inherit from a shared base to ensure a clean, maintainable, and decoupled codebase.
+
+## Core Components
+* **BaseModel:** The parent class providing unique identification (id as UUID4) and audit timestamps (created_at, updated_at) for all entities, along with core lifecycle operations (save, update, delete).
+
+* **User:** Handles profile management (first_name, last_name, email, protected password, and is_admin status) and authentication operations (register, login).
+
+* **Place:** Represents property listings, detailing title, description, price, latitude, and longitude. It links to the owner via owner_id and tracks features through amenity_ids.
+
+* **Review:** Manages user feedback and scores (rating, comment) for specific properties, mapping relationships using place_id and user_id.
+
+* **Amenity:** Represents available property facilities (name, description).
+
+## Entity Relationships
+* **User <-> Place (1 to Many):** A user can own multiple places; each place has one owner.
+
+* **User <-> Review (1 to Many):** A user can write multiple reviews.
+
+* **Place <-> Review (1 to Many):** A place can receive multiple reviews.
+
+* **Place <-> Amenity (Many to Many):** Places can include multiple amenities, and amenities can belong to multiple places (managed via ID cross-referencing).
 
 
-
-
-
-
-
-
-
-
-
+---
 
 # Sequence Diagrams for API Calls
 
