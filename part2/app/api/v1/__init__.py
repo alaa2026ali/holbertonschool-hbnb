@@ -1,8 +1,9 @@
 from flask import Blueprint
 from flask_restx import Api
-from .amenities import api as amenities_ns
+
 
 from .users import api as users_ns
+from .amenities import api as amenities_ns
 
 api_v1_blueprint = Blueprint(
     'api_v1',
