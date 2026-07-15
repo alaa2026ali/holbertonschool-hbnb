@@ -37,6 +37,12 @@ class UserList(Resource):
         """Register a new user"""
         user_data = api.payload
 
+        required_fields = ["first_name", "last_name", "email"]
+
+        for field in required_fields:
+            if field not in user_data:
+                api.abort(400, f"Missing required field: {field}")
+
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             api.abort(400, "Email already registered")
@@ -56,6 +62,7 @@ class UserResource(Resource):
     def get(self, user_id):
         """Get user details by ID"""
         user = facade.get_user(user_id)
+
         if not user:
             api.abort(404, "User not found")
 
@@ -66,11 +73,13 @@ class UserResource(Resource):
     def put(self, user_id):
         """Update user information"""
         user = facade.get_user(user_id)
+
         if not user:
             api.abort(404, "User not found")
 
         try:
             facade.update_user(user_id, api.payload)
             return facade.get_user(user_id), 200
+
         except ValueError as e:
             api.abort(400, str(e))
