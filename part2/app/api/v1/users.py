@@ -41,8 +41,11 @@ class UserList(Resource):
         if existing_user:
             api.abort(400, "Email already registered")
 
-        new_user = facade.create_user(user_data)
-        return new_user, 201
+        try:
+            new_user = facade.create_user(user_data)
+            return new_user, 201
+        except ValueError as e:
+            api.abort(400, str(e))
 
 
 @api.route('/<string:user_id>')
@@ -62,11 +65,12 @@ class UserResource(Resource):
     @api.marshal_with(user_model)
     def put(self, user_id):
         """Update user information"""
-        user_data = api.payload
-
         user = facade.get_user(user_id)
         if not user:
             api.abort(404, "User not found")
 
-        facade.update_user(user_id, user_data)
-        return facade.get_user(user_id), 200
+        try:
+            facade.update_user(user_id, api.payload)
+            return facade.get_user(user_id), 200
+        except ValueError as e:
+            api.abort(400, str(e))
