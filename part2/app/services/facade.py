@@ -74,7 +74,38 @@ class HBnBFacade:
         return self.place_repo.get_all()
 
     def update_place(self, place_id, place_data):
-        self.place_repo.update(place_id, place_data)
+        place = self.place_repo.get(place_id)
+
+        if not place:
+            raise KeyError("Place not found")
+
+        validated_data = {}
+
+        if "title" in place_data:
+            validated_data["title"] = Place.validate_title(
+                place_data["title"]
+            )
+
+        if "description" in place_data:
+            validated_data["description"] = place_data["description"]
+
+        if "price" in place_data:
+            validated_data["price"] = Place.validate_price(
+                place_data["price"]
+            )
+
+        if "latitude" in place_data:
+            validated_data["latitude"] = Place.validate_latitude(
+                place_data["latitude"]
+            )
+
+        if "longitude" in place_data:
+            validated_data["longitude"] = Place.validate_longitude(
+                place_data["longitude"]
+            )
+
+        self.place_repo.update(place_id, validated_data)
+        return self.place_repo.get(place_id)
 
     def create_review(self, review_data):
         user_id = review_data.pop('user_id', None)
@@ -108,7 +139,25 @@ class HBnBFacade:
         return place.reviews
 
     def update_review(self, review_id, review_data):
-        self.review_repo.update(review_id, review_data)
+        review = self.review_repo.get(review_id)
+
+        if not review:
+            raise KeyError("Review not found")
+
+        validated_data = {}
+
+        if "text" in review_data:
+            validated_data["text"] = Review.validate_text(
+                review_data["text"]
+            )
+
+        if "rating" in review_data:
+            validated_data["rating"] = Review.validate_rating(
+                review_data["rating"]
+            )
+
+        self.review_repo.update(review_id, validated_data)
+        return self.review_repo.get(review_id)
 
     def delete_review(self, review_id):
         review = self.review_repo.get(review_id)
