@@ -63,13 +63,13 @@ python3 run.py
 The API will be available at:
 
 ```
-http://127.0.0.1:5000/
+http://127.0.0.1:5000/api/v1/
 ```
 
 Swagger documentation:
 
 ```
-http://127.0.0.1:5000/
+http://127.0.0.1:5000/api/v1/
 ```
 
 ---
@@ -96,6 +96,7 @@ http://127.0.0.1:5000/
 * GET `/api/v1/places/`
 * GET `/api/v1/places/<id>`
 * PUT `/api/v1/places/<id>`
+* GET `/api/v1/places/<place_id>/reviews`
 
 ### Reviews
 
@@ -103,6 +104,7 @@ http://127.0.0.1:5000/
 * GET `/api/v1/reviews/`
 * GET `/api/v1/reviews/<id>`
 * PUT `/api/v1/reviews/<id>`
+* DELETE `/api/v1/reviews/<id>`
 
 ---
 
@@ -132,4 +134,4 @@ A detailed testing report is available in **TESTING_REPORT.md**.
 
 * Alaa Aldwasari
 * Lama
-* Noura
+* Noura Alosimi 

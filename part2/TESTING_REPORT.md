@@ -100,6 +100,9 @@ The API was verified using the following methods:
 | Create a valid place | 201 Created | Passed |
 | Invalid price | 400 Bad Request | Passed |
 | Missing title | 400 Bad Request | Passed |
+|Invalid owner ID | 400 Bad Request | Passed
+|Invalid latitude | 400 Bad Request | Passed
+| Invalid longitude | 400 Bad Request | Passed
 
 ### GET /api/v1/places/
 
@@ -149,9 +152,24 @@ The API was verified using the following methods:
 | Test Case | Expected Result | Status |
 |-----------|-----------------|--------|
 | Valid update | 200 OK | Passed |
+| Invalid review ID | 404 Not Found | Passed |
 
+
+### DELETE /api/v1/reviews/{id}
+
+| Test Case | Expected Result | Status |
+|-----------|-----------------|--------|
+| Delete existing review | 204 No Content | Passed |
+| Invalid review ID | 404 Not Found | Passed |
 ---
+### GET /api/v1/places/{place_id}/reviews
 
+| Test Case | Expected Result | Status |
+|-----------|-----------------|--------|
+| Retrieve reviews for an existing place | 200 OK | Passed |
+| Invalid place ID | 404 Not Found | Passed |
+
+--- 
 # Validation Testing
 
 The following validation rules were tested:
