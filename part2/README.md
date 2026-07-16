@@ -22,20 +22,42 @@ HBnB Evolution - Part 2 is a RESTful API developed using **Python**, **Flask**, 
 ## Project Structure
 
 ```text
-.
+hbnb/
 ├── app/
+│   ├── __init__.py
 │   ├── api/
+│   │   ├── __init__.py
+│   │   └── v1/
+│   │       ├── __init__.py
+│   │       ├── amenities.py
+│   │       ├── places.py
+│   │       ├── reviews.py
+│   │       └── users.py
 │   ├── models/
+│   │   ├── __init__.py
+│   │   ├── BaseModel.py
+│   │   ├── amenity.py
+│   │   ├── place.py
+│   │   ├── review.py
+│   │   └── user.py
 │   ├── persistence/
-│   ├── services/
-│   └── __init__.py
+│   │   ├── __init__.py
+│   │   └── repository.py
+│   └── services/
+│       ├── __init__.py
+│       └── facade.py
 ├── tests/
-├── run.py
-├── requirements.txt
+│   ├── __init__.py
+│   ├── test_amenities.py
+│   ├── test_places.py
+│   ├── test_reviews.py
+│   └── test_users.py
+├── config.py
 ├── README.md
-└── TESTING_REPORT.md
+├── TESTING_REPORT.md
+├── requirements.txt
+└── run.py
 ```
-
 ---
 
 ## Requirements
