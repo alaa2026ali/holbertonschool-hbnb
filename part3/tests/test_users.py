@@ -18,7 +18,8 @@ def test_create_user_success(client):
     payload = {
         "first_name": "Fahad",
         "last_name": "Alotaibi",
-        "email": "fahad_test@example.com"
+        "email": "fahad_test@example.com",
+        "password": "123456"
     }
 
     response = client.post("/api/v1/users/", json=payload)
@@ -45,7 +46,9 @@ def test_create_user_invalid_email(client):
     payload = {
         "first_name": "Ali",
         "last_name": "Test",
-        "email": "abc"
+        "email": "abc",
+        "password": "123456"
+
     }
 
     response = client.post("/api/v1/users/", json=payload)
@@ -57,7 +60,9 @@ def test_create_user_empty_first_name(client):
     payload = {
         "first_name": "",
         "last_name": "Test",
-        "email": "test@example.com"
+        "email": "test@example.com",
+        "password": "123456"
+
     }
 
     response = client.post("/api/v1/users/", json=payload)
@@ -69,7 +74,8 @@ def test_create_user_long_first_name(client):
     payload = {
         "first_name": "A" * 51,
         "last_name": "Test",
-        "email": "long@example.com"
+        "email": "long@example.com",
+        "password": "123456"
     }
 
     response = client.post("/api/v1/users/", json=payload)
@@ -80,7 +86,9 @@ def test_create_user_long_first_name(client):
 def test_create_user_missing_last_name(client):
     payload = {
         "first_name": "Ali",
-        "email": "ali@example.com"
+        "email": "ali@example.com",
+        "password": "123456"
+
     }
 
     response = client.post("/api/v1/users/", json=payload)
