@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 
 from app.services import facade
+from flask_jwt_extended import jwt_required
 
 
 api = Namespace("reviews", description="Review operations")
@@ -90,6 +91,7 @@ class ReviewList(Resource):
 
     @api.expect(review_create_model, validate=True)
     @api.marshal_with(review_model, code=201)
+    @jwt_required()
     def post(self):
         """Create a new review."""
         review_data = api.payload
@@ -118,6 +120,7 @@ class ReviewResource(Resource):
 
     @api.expect(review_update_model, validate=True)
     @api.marshal_with(review_model)
+    @jwt_required()
     def put(self, review_id):
         """Update an existing review."""
         review = facade.get_review(review_id)
@@ -133,6 +136,7 @@ class ReviewResource(Resource):
             api.abort(400, str(error))
 
     @api.response(204, "Review deleted")
+    @jwt_required()
     def delete(self, review_id):
         """Delete a review."""
         review = facade.get_review(review_id)
