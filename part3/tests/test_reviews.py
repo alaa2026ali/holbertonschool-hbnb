@@ -22,7 +22,8 @@ def create_test_user(client):
         json={
             "first_name": "Noura",
             "last_name": "Fahad",
-            "email": unique_email
+            "email": unique_email,
+            "password": "123456"
         }
     )
 
