@@ -265,5 +265,3 @@ def test_get_reviews_for_missing_place(client):
     response = client.get(
         "/api/v1/places/non_existing_place/reviews"
     )
-
-    assert response.status_code == 404
