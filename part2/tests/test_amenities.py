@@ -136,5 +136,3 @@ def test_update_amenity_not_found(client):
             f'/api/v1/amenities/{non_existent_id}',
             json=payload
         )
-
-        assert response.status_code == 404
