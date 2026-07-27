@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 
 from app.services import facade
-
+from flask_jwt_extended import jwt_required
 
 api = Namespace("places", description="Place operations")
 
@@ -129,6 +129,7 @@ class PlaceList(Resource):
 
     @api.expect(place_create_model, validate=True)
     @api.marshal_with(place_model, code=201)
+    @jwt_required()
     def post(self):
         """Create a new place."""
         place_data = api.payload
@@ -157,6 +158,7 @@ class PlaceResource(Resource):
 
     @api.expect(place_update_model, validate=True)
     @api.marshal_with(place_model)
+    @jwt_required()
     def put(self, place_id):
         """Update an existing place."""
         place = facade.get_place(place_id)
