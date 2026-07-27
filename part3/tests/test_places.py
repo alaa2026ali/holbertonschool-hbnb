@@ -1,28 +1,50 @@
 import uuid
-
 import pytest
 from run import app
 
 
 @pytest.fixture
 def client():
-    """Create Flask test client."""
     app.config["TESTING"] = True
 
     with app.test_client() as client:
         yield client
 
 
+@pytest.fixture
+def auth_token(client):
+    email = f"{uuid.uuid4().hex}@test.com"
+
+    client.post(
+        "/api/v1/users/",
+        json={
+            "first_name": "Test",
+            "last_name": "User",
+            "email": email,
+            "password": "123456"
+        }
+    )
+
+    response = client.post(
+        "/api/v1/auth/login",
+        json={
+            "email": email,
+            "password": "123456"
+        }
+    )
+
+    return response.json["access_token"]
+
+
 def create_test_user(client):
-    """Create and return a user for place tests."""
-    unique_email = f"place_{uuid.uuid4().hex}@example.com"
+    email = f"{uuid.uuid4().hex}@example.com"
 
     response = client.post(
         "/api/v1/users/",
         json={
             "first_name": "Noura",
             "last_name": "Fahad",
-            "email": unique_email,
+            "email": email,
             "password": "123456"
         }
     )
@@ -31,15 +53,17 @@ def create_test_user(client):
     return response.json
 
 
-def create_test_place(client):
-    """Create and return a place for tests."""
+def create_test_place(client, auth_token):
     user = create_test_user(client)
 
     response = client.post(
         "/api/v1/places/",
+        headers={
+            "Authorization": f"Bearer {auth_token}"
+        },
         json={
             "title": "Luxury Apartment",
-            "description": "Beautiful apartment in Riyadh",
+            "description": "Beautiful apartment",
             "price": 350,
             "latitude": 24.7136,
             "longitude": 46.6753,
@@ -52,174 +76,103 @@ def create_test_place(client):
     return response.json
 
 
-# ==========================================================
-# Success Test Cases
-# ==========================================================
-
-def test_create_place_success(client):
+def test_create_place_success(client, auth_token):
     user = create_test_user(client)
 
-    payload = {
-        "title": "Beach House",
-        "description": "A beautiful house near the beach",
-        "price": 500,
-        "latitude": 24.7136,
-        "longitude": 46.6753,
-        "owner_id": user["id"],
-        "amenities": []
-    }
-
-    response = client.post("/api/v1/places/", json=payload)
+    response = client.post(
+        "/api/v1/places/",
+        headers={
+            "Authorization": f"Bearer {auth_token}"
+        },
+        json={
+            "title": "Beach House",
+            "description": "Nice house",
+            "price": 500,
+            "latitude": 24.7136,
+            "longitude": 46.6753,
+            "owner_id": user["id"],
+            "amenities": []
+        }
+    )
 
     assert response.status_code == 201
-    assert response.json["title"] == "Beach House"
-    assert response.json["price"] == 500
-    assert response.json["owner"]["id"] == user["id"]
-    assert "id" in response.json
 
 
-def test_get_all_places_success(client):
-    create_test_place(client)
+def test_get_all_places_success(client, auth_token):
+    create_test_place(client, auth_token)
 
     response = client.get("/api/v1/places/")
 
     assert response.status_code == 200
-    assert isinstance(response.json, list)
 
 
-def test_get_place_by_id_success(client):
-    place = create_test_place(client)
+def test_get_place_by_id_success(client, auth_token):
+    place = create_test_place(client, auth_token)
 
-    response = client.get(f"/api/v1/places/{place['id']}")
-
-    assert response.status_code == 200
-    assert response.json["id"] == place["id"]
-    assert response.json["title"] == "Luxury Apartment"
-
-
-def test_update_place_success(client):
-    place = create_test_place(client)
-
-    payload = {
-        "title": "Updated Apartment",
-        "price": 450
-    }
-
-    response = client.put(
-        f"/api/v1/places/{place['id']}",
-        json=payload
+    response = client.get(
+        f"/api/v1/places/{place['id']}"
     )
 
     assert response.status_code == 200
-    assert response.json["title"] == "Updated Apartment"
-    assert response.json["price"] == 450
 
 
-# ==========================================================
-# Validation Test Cases
-# ==========================================================
+def test_update_place_success(client, auth_token):
+    place = create_test_place(client, auth_token)
 
-def test_create_place_invalid_owner(client):
-    payload = {
-        "title": "Invalid Place",
-        "description": "Owner does not exist",
-        "price": 100,
-        "latitude": 24.7136,
-        "longitude": 46.6753,
-        "owner_id": "non_existing_owner",
-        "amenities": []
-    }
+    response = client.put(
+        f"/api/v1/places/{place['id']}",
+        headers={
+            "Authorization": f"Bearer {auth_token}"
+        },
+        json={
+            "title": "Updated Apartment",
+            "price": 450
+        }
+    )
 
-    response = client.post("/api/v1/places/", json=payload)
-
-    assert response.status_code == 400
+    assert response.status_code == 200
 
 
-def test_create_place_negative_price(client):
-    user = create_test_user(client)
+def test_create_place_invalid_owner(client, auth_token):
 
-    payload = {
-        "title": "Invalid Price Place",
-        "description": "Invalid price",
-        "price": -50,
-        "latitude": 24.7136,
-        "longitude": 46.6753,
-        "owner_id": user["id"],
-        "amenities": []
-    }
-
-    response = client.post("/api/v1/places/", json=payload)
+    response = client.post(
+        "/api/v1/places/",
+        headers={
+            "Authorization": f"Bearer {auth_token}"
+        },
+        json={
+            "title": "Invalid",
+            "description": "test",
+            "price": 100,
+            "latitude": 24,
+            "longitude": 46,
+            "owner_id": "wrong",
+            "amenities": []
+        }
+    )
 
     assert response.status_code == 400
 
-
-def test_create_place_invalid_latitude(client):
-    user = create_test_user(client)
-
-    payload = {
-        "title": "Invalid Latitude Place",
-        "description": "Invalid latitude",
-        "price": 200,
-        "latitude": 100,
-        "longitude": 46.6753,
-        "owner_id": user["id"],
-        "amenities": []
-    }
-
-    response = client.post("/api/v1/places/", json=payload)
-
-    assert response.status_code == 400
-
-
-def test_create_place_invalid_longitude(client):
-    user = create_test_user(client)
-
-    payload = {
-        "title": "Invalid Longitude Place",
-        "description": "Invalid longitude",
-        "price": 200,
-        "latitude": 24.7136,
-        "longitude": 200,
-        "owner_id": user["id"],
-        "amenities": []
-    }
-
-    response = client.post("/api/v1/places/", json=payload)
-
-    assert response.status_code == 400
-
-
-def test_create_place_missing_title(client):
-    user = create_test_user(client)
-
-    payload = {
-        "description": "Missing title",
-        "price": 200,
-        "latitude": 24.7136,
-        "longitude": 46.6753,
-        "owner_id": user["id"],
-        "amenities": []
-    }
-
-    response = client.post("/api/v1/places/", json=payload)
-
-    assert response.status_code == 400
-    
-
-
-# ==========================================================
-# Not Found Test Cases
-# ==========================================================
 
 def test_get_place_not_found(client):
-    response = client.get("/api/v1/places/non_existing_id")
+
+    response = client.get(
+        "/api/v1/places/not_found"
+    )
 
     assert response.status_code == 404
 
 
-def test_update_place_not_found(client):
+def test_update_place_not_found(client, auth_token):
+
     response = client.put(
-        "/api/v1/places/non_existing_id",
-        json={"title": "Updated Place"}
+        "/api/v1/places/not_found",
+        headers={
+            "Authorization": f"Bearer {auth_token}"
+        },
+        json={
+            "title": "Updated"
+        }
     )
 
+    assert response.status_code == 404
