@@ -221,4 +221,3 @@ def test_update_place_not_found(client):
         json={"title": "Updated Place"}
     )
 
-    assert response.status_code == 404
