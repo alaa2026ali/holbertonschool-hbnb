@@ -114,3 +114,5 @@ def test_update_user_not_found(client):
     }
 
     response = client.put("/api/v1/users/non_existing_id", json=payload)
+    
+    assert response.status_code == 404
