@@ -1,12 +1,21 @@
 import re
+from flask_bcrypt import Bcrypt
 from .base_model import BaseModel
 
+bcrypt = Bcrypt()
+
+
 class User(BaseModel):
-    def __init__(self, first_name, last_name, email, is_admin=False):
+    def __init__(self, first_name, last_name, email, password, is_admin=False):
         super().__init__()
+
         self.first_name = self.validate_name(first_name, "first_name")
         self.last_name = self.validate_name(last_name, "last_name")
         self.email = self.validate_email(email)
+
+        # Hash password before storing it
+        self.password = self.hash_password(password)
+
         self.is_admin = is_admin
         self.places = []
         self.reviews = []
@@ -14,15 +23,33 @@ class User(BaseModel):
     @staticmethod
     def validate_name(name, field_name):
         if not name or len(name) > 50:
-            raise ValueError(f"{field_name} is required and must be <= 50 characters")
+            raise ValueError(
+                f"{field_name} is required and must be <= 50 characters"
+            )
         return name
 
     @staticmethod
     def validate_email(email):
         pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+
         if not email or not re.match(pattern, email):
             raise ValueError("Invalid email format")
-        return email 
+
+        return email
+
+    @staticmethod
+    def hash_password(password):
+        if not password:
+            raise ValueError("Password is required")
+
+        return bcrypt.generate_password_hash(password).decode("utf-8")
+
+    def verify_password(self, password):
+        return bcrypt.check_password_hash(
+            self.password,
+            password
+        )
+
     def add_place(self, place):
         """Add a place owned by the user."""
         if place not in self.places:
