@@ -14,6 +14,7 @@ user_create_model = api.model('UserCreate', {
     'first_name': fields.String(required=True, description='First name of the user'),
     'last_name': fields.String(required=True, description='Last name of the user'),
     'email': fields.String(required=True, description='Email address of the user'),
+    'password': fields.String(required=True, description='User password')
 })
 
 user_update_model = api.model('UserUpdate', {
@@ -37,7 +38,7 @@ class UserList(Resource):
         """Register a new user"""
         user_data = api.payload
 
-        required_fields = ["first_name", "last_name", "email"]
+        required_fields = ["first_name", "last_name", "email" , "password"]
 
         for field in required_fields:
             if field not in user_data:
