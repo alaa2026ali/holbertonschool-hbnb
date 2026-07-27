@@ -20,7 +20,8 @@ user_create_model = api.model('UserCreate', {
 user_update_model = api.model('UserUpdate', {
     'first_name': fields.String(description='First name of the user'),
     'last_name': fields.String(description='Last name of the user'),
-    'email': fields.String(description='Email address of the user')
+    'email': fields.String(description='Email address of the user'),
+    
 })
 
 
