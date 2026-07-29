@@ -1,11 +1,9 @@
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restx import Namespace, Resource, fields
 
 from app.services import facade
-from flask_jwt_extended import jwt_required
-
 
 api = Namespace("reviews", description="Review operations")
-
 
 review_user_model = api.model("ReviewUser", {
     "id": fields.String(
@@ -23,7 +21,6 @@ review_user_model = api.model("ReviewUser", {
     )
 })
 
-
 review_place_model = api.model("ReviewPlace", {
     "id": fields.String(
         readOnly=True,
@@ -33,7 +30,6 @@ review_place_model = api.model("ReviewPlace", {
         description="Title of the place"
     )
 })
-
 
 review_model = api.model("Review", {
     "id": fields.String(
@@ -49,7 +45,6 @@ review_model = api.model("Review", {
     "user": fields.Nested(review_user_model),
     "place": fields.Nested(review_place_model)
 })
-
 
 review_create_model = api.model("ReviewCreate", {
     "text": fields.String(
@@ -69,7 +64,6 @@ review_create_model = api.model("ReviewCreate", {
         description="The unique identifier of the place"
     )
 })
-
 
 review_update_model = api.model("ReviewUpdate", {
     "text": fields.String(
@@ -94,10 +88,25 @@ class ReviewList(Resource):
     @jwt_required()
     def post(self):
         """Create a new review."""
-        review_data = api.payload
+        review_data = api.payload.copy()
+        current_user = get_jwt_identity()
+
+        # Ignore user_id from request
+        review_data["user_id"] = current_user
 
         try:
-            review = facade.create_review(review_data.copy())
+            place = facade.get_place(review_data["place_id"])
+
+            if place.owner.id == current_user:
+                api.abort(400, "You cannot review your own place")
+
+            reviews = facade.get_reviews_by_place(review_data["place_id"])
+
+            for review in reviews:
+                if review.user.id == current_user:
+                    api.abort(400, "You have already reviewed this place")
+
+            review = facade.create_review(review_data)
             return review, 201
 
         except (ValueError, KeyError) as error:
@@ -128,6 +137,11 @@ class ReviewResource(Resource):
         if not review:
             api.abort(404, "Review not found")
 
+        current_user = get_jwt_identity()
+
+        if review.user.id != current_user:
+            api.abort(403, "Unauthorized action")
+
         try:
             facade.update_review(review_id, api.payload)
             return facade.get_review(review_id), 200
@@ -143,6 +157,11 @@ class ReviewResource(Resource):
 
         if not review:
             api.abort(404, "Review not found")
+
+        current_user = get_jwt_identity()
+
+        if review.user.id != current_user:
+            api.abort(403, "Unauthorized action")
 
         try:
             facade.delete_review(review_id)
