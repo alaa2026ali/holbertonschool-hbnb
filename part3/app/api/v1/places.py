@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 
 from app.services import facade
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Namespace("places", description="Place operations")
 
@@ -126,20 +126,25 @@ class PlaceList(Resource):
     def get(self):
         """Retrieve the list of all places."""
         return facade.get_all_places(), 200
-
+        
     @api.expect(place_create_model, validate=True)
     @api.marshal_with(place_model, code=201)
     @jwt_required()
     def post(self):
         """Create a new place."""
-        place_data = api.payload
+
+        place_data = api.payload.copy()
+        current_user = get_jwt_identity()
+
+        # Ignore owner_id from request
+        place_data["owner_id"] = current_user
 
         try:
-            place = facade.create_place(place_data.copy())
+            place = facade.create_place(place_data)
             return place, 201
 
-        except (ValueError, KeyError) as error:
-            api.abort(400, str(error))
+        except (ValueError, KeyError) as e:
+            api.abort(400, str(e))
 
 
 @api.route("/<string:place_id>")
@@ -161,17 +166,23 @@ class PlaceResource(Resource):
     @jwt_required()
     def put(self, place_id):
         """Update an existing place."""
+
         place = facade.get_place(place_id)
 
         if not place:
             api.abort(404, "Place not found")
 
+        current_user = get_jwt_identity()
+
+        if place.owner.id != current_user:
+            api.abort(403, "Unauthorized action")
+
         try:
             facade.update_place(place_id, api.payload)
             return facade.get_place(place_id), 200
 
-        except (ValueError, KeyError) as error:
-            api.abort(400, str(error))
+        except (ValueError, KeyError) as e:
+            api.abort(400, str(e))
 
 @api.route("/<string:place_id>/reviews")
 @api.response(404, "Place not found")
