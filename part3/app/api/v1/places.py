@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 
 from app.services import facade
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 
 api = Namespace("places", description="Place operations")
 
@@ -126,7 +126,7 @@ class PlaceList(Resource):
     def get(self):
         """Retrieve the list of all places."""
         return facade.get_all_places(), 200
-        
+
     @api.expect(place_create_model, validate=True)
     @api.marshal_with(place_model, code=201)
     @jwt_required()
@@ -172,9 +172,11 @@ class PlaceResource(Resource):
         if not place:
             api.abort(404, "Place not found")
 
-        current_user = get_jwt_identity()
+        current_user_id = get_jwt_identity()
+        claims = get_jwt()
+        is_admin = claims.get("is_admin", False)
 
-        if place.owner.id != current_user:
+        if not is_admin and place.owner.id != current_user_id:
             api.abort(403, "Unauthorized action")
 
         try:
@@ -183,6 +185,7 @@ class PlaceResource(Resource):
 
         except (ValueError, KeyError) as e:
             api.abort(400, str(e))
+
 
 @api.route("/<string:place_id>/reviews")
 @api.response(404, "Place not found")
