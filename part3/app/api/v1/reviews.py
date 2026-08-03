@@ -1,4 +1,4 @@
-from flask_jwt_extended import get_jwt_identity, jwt_required
+from flask_jwt_extended import get_jwt_identity, get_jwt, jwt_required
 from flask_restx import Namespace, Resource, fields
 
 from app.services import facade
@@ -137,9 +137,11 @@ class ReviewResource(Resource):
         if not review:
             api.abort(404, "Review not found")
 
-        current_user = get_jwt_identity()
+        current_user_id = get_jwt_identity()
+        claims = get_jwt()
+        is_admin = claims.get("is_admin", False)
 
-        if review.user.id != current_user:
+        if not is_admin and review.user.id != current_user_id:
             api.abort(403, "Unauthorized action")
 
         try:
@@ -158,9 +160,11 @@ class ReviewResource(Resource):
         if not review:
             api.abort(404, "Review not found")
 
-        current_user = get_jwt_identity()
+        current_user_id = get_jwt_identity()
+        claims = get_jwt()
+        is_admin = claims.get("is_admin", False)
 
-        if review.user.id != current_user:
+        if not is_admin and review.user.id != current_user_id:
             api.abort(403, "Unauthorized action")
 
         try:
