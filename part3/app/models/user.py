@@ -1,54 +1,58 @@
 import re
-from flask_bcrypt import Bcrypt
-from .base_model import BaseModel
 
-bcrypt = Bcrypt()
+from app import db, bcrypt
+from sqlalchemy.orm import validates
+
+from .base_model import BaseModel
 
 
 class User(BaseModel):
-    def __init__(self, first_name, last_name, email, password, is_admin=False):
-        super().__init__()
+    __tablename__ = 'users'
 
-        self.first_name = self.validate_name(first_name, "first_name")
-        self.last_name = self.validate_name(last_name, "last_name")
-        self.email = self.validate_email(email)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(120), nullable=False, unique=True)
+    password = db.Column(db.String(128), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
 
-        # Hash password before storing it
-        self.password = self.hash_password(password)
-
-        self.is_admin = is_admin
+    def __init__(self, *args, **kwargs):
+        # Kept in-memory for now; Place/Review aren't mapped yet
         self.places = []
         self.reviews = []
+        super().__init__(*args, **kwargs)
 
-    @staticmethod
-    def validate_name(name, field_name):
-        if not name or len(name) > 50:
+    @validates("first_name")
+    def validate_first_name(self, key, value):
+        if not value or len(value) > 50:
             raise ValueError(
-                f"{field_name} is required and must be <= 50 characters"
+                "first_name is required and must be <= 50 characters"
             )
-        return name
+        return value
 
-    @staticmethod
-    def validate_email(email):
+    @validates("last_name")
+    def validate_last_name(self, key, value):
+        if not value or len(value) > 50:
+            raise ValueError(
+                "last_name is required and must be <= 50 characters"
+            )
+        return value
+
+    @validates("email")
+    def validate_email(self, key, value):
         pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
-
-        if not email or not re.match(pattern, email):
+        if not value or not re.match(pattern, value):
             raise ValueError("Invalid email format")
+        return value
 
-        return email
-
-    @staticmethod
-    def hash_password(password):
+    def hash_password(self, password):
+        """Hash the password before storing it."""
         if not password:
             raise ValueError("Password is required")
-
-        return bcrypt.generate_password_hash(password).decode("utf-8")
+        self.password = bcrypt.generate_password_hash(password).decode("utf-8")
 
     def verify_password(self, password):
-        return bcrypt.check_password_hash(
-            self.password,
-            password
-        )
+        """Verify the hashed password."""
+        return bcrypt.check_password_hash(self.password, password)
 
     def add_place(self, place):
         """Add a place owned by the user."""
