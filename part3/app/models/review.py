@@ -1,9 +1,9 @@
-from .base_model import BaseModel
+from .base_model import PlainBaseModel
 from .place import Place
 from .user import User
 
 
-class Review(BaseModel):
+class Review(PlainBaseModel):
     def __init__(self, text, rating, place, user):
         super().__init__()
         self.text = self.validate_text(text)
