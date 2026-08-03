@@ -1,6 +1,7 @@
-from .base_model import BaseModel
+from .base_model import PlainBaseModel
 
-class Amenity(BaseModel):
+
+class Amenity(PlainBaseModel):
     def __init__(self, name):
         super().__init__()
         self.name = self.validate_name(name)
