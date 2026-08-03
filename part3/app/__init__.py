@@ -1,13 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from app.api.v1 import api_v1_blueprint
-from config import config
 from flask_jwt_extended import JWTManager
+from config import config
 
 jwt = JWTManager()
 db = SQLAlchemy()
 bcrypt = Bcrypt()
+
+from app.api.v1 import api_v1_blueprint
 
 
 def create_app(config_name='default'):
