@@ -1,8 +1,8 @@
-from .base_model import BaseModel
+from .base_model import PlainBaseModel
 from .user import User
 
 
-class Place(BaseModel):
+class Place(PlainBaseModel):
     def __init__(self, title, description, price, latitude, longitude, owner):
         super().__init__()
         self.title = self.validate_title(title)
@@ -55,4 +55,4 @@ class Place(BaseModel):
     def delete_review(self, review):
         """Remove a review from the place."""
         if review in self.reviews:
-            self.reviews.remove(review)   
+            self.reviews.remove(review)
