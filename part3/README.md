@@ -1,197 +1,260 @@
-# HBnB - Auth & DB
+# Part 3: HBnB - Auth & DB
 
 ## Description
 
-HBnB is an Airbnb-like application developed as part of the Holberton School Software Engineering Program. This project represents the third part of the HBnB evolution, focusing on implementing authentication, authorization, and database integration.
+HBnB is an Airbnb-inspired RESTful API built with Flask. This is **Part 3** of the HBnB Evolution project, and represents the most complete and current version of the application.
 
-In this phase, the application is upgraded from an in-memory storage system to a persistent database solution using SQLAlchemy. The project also introduces secure user authentication using JWT and password hashing.
+Building on the REST API from Part 2, this version adds:
 
-## Project Objectives
+* JWT-based user authentication and login.
+* Secure password hashing.
+* Role-based access control (regular users vs. administrators).
+* Ownership-based permissions on places and reviews.
+* A relational database (SQLAlchemy + SQLite) replacing in-memory storage for the `User` entity.
 
-The main objectives of this project are:
+## Table of Contents
 
-* Implement user authentication and authorization.
-* Secure user passwords using hashing techniques.
-* Integrate a relational database using SQLAlchemy ORM.
-* Replace in-memory storage with database persistence.
-* Implement CRUD operations with database models.
-* Manage relationships between application entities.
-* Apply role-based access control for protected resources.
+* [Technologies Used](#technologies-used)
+* [Project Structure](#project-structure)
+* [Architecture](#architecture)
+* [Installation](#installation)
+* [Database Setup](#database-setup)
+* [Running the Application](#running-the-application)
+* [Authentication](#authentication)
+* [API Reference](#api-reference)
+* [Testing](#testing)
+* [Known Limitations](#known-limitations)
+* [Authors](#authors)
 
 ## Technologies Used
 
 * Python 3
 * Flask
-* Flask-RESTX
-* Flask-JWT-Extended
-* Flask-Bcrypt
-* SQLAlchemy
-* SQLite (development)
-* MySQL (production-ready)
-* Git & GitHub
+* Flask-RESTX (REST API + Swagger docs)
+* Flask-JWT-Extended (authentication)
+* Flask-Bcrypt (password hashing)
+* SQLAlchemy / Flask-SQLAlchemy (ORM)
+* SQLite (development database)
+* Pytest (testing)
 
-## Project Architecture
-
-The project follows a layered architecture:
+## Project Structure
 
 ```
-API Layer
-    |
-    v
-Business Logic Layer (Facade)
-    |
-    v
-Repository Layer
-    |
-    v
-Database Layer (SQLAlchemy)
+part3/
+├── app/
+│   ├── __init__.py            # App factory, extensions (db, jwt, bcrypt)
+│   ├── api/
+│   │   └── v1/
+│   │       ├── auth.py        # Login endpoint
+│   │       ├── users.py       # User endpoints
+│   │       ├── places.py      # Place endpoints
+│   │       ├── reviews.py     # Review endpoints
+│   │       └── amenities.py   # Amenity endpoints
+│   ├── models/
+│   │   ├── base_model.py      # SQLAlchemy BaseModel + PlainBaseModel
+│   │   ├── user.py            # User (SQLAlchemy-mapped)
+│   │   ├── place.py           # Place (in-memory)
+│   │   ├── review.py          # Review (in-memory)
+│   │   └── amenity.py         # Amenity (in-memory)
+│   ├── persistence/
+│   │   └── repository.py      # InMemoryRepository, SQLAlchemyRepository
+│   └── services/
+│       ├── facade.py          # HBnBFacade — business logic layer
+│       └── repositories/
+│           └── user_repository.py  # UserRepository (extends SQLAlchemyRepository)
+├── tests/                     # Automated test suite
+├── config.py                  # App & database configuration
+├── requirements.txt
+├── run.py                     # Entry point
+├── TESTING_REPORT.md
+└── README.md
 ```
 
-### Main Components
+## Architecture
 
-* **Models**
+The application follows a layered architecture:
 
-  * User
-  * Place
-  * Review
-  * Amenity
+```
+API Layer (Flask-RESTX Resources)
+    |
+    v
+Business Logic Layer (HBnBFacade)
+    |
+    v
+Repository Layer (InMemoryRepository / SQLAlchemyRepository / UserRepository)
+    |
+    v
+Database Layer (SQLAlchemy ORM -> SQLite)
+```
 
-* **Repositories**
-
-  * Database repository for persistent data management.
-
-* **Services**
-
-  * Facade pattern to handle communication between API and repositories.
-
-* **API Endpoints**
-
-  * User management
-  * Place management
-  * Review management
-  * Amenity management
-  * Authentication
-
-## Authentication
-
-The project uses JWT-based authentication.
-
-Features include:
-
-* User registration.
-* User login.
-* Token generation.
-* Protected API endpoints.
-* Access control based on user roles.
-
-Passwords are securely stored using hashing and are never saved as plain text.
-
-## Database Design
-
-The application uses SQLAlchemy ORM to define database models and relationships.
-
-Main entities:
-
-### User
-
-Stores user information:
-
-* ID
-* First name
-* Last name
-* Email
-* Hashed password
-* Admin status
-
-### Place
-
-Represents properties created by users.
-
-### Review
-
-Stores reviews written by users about places.
-
-### Amenity
-
-Stores available features for places.
+* **API Layer** — defines routes, request/response models, and input validation.
+* **Facade** — the single entry point the API layer talks to; coordinates business rules and delegates to the right repository.
+* **Repository Layer** — abstracts data access. `User` is persisted via `UserRepository` (SQLAlchemy); `Place`, `Review`, and `Amenity` currently use `InMemoryRepository`.
 
 ## Installation
 
-Clone the repository:
-
 ```bash
-git clone <repository_url>
-```
-
-Navigate to the project directory:
-
-```bash
-cd HBnB
-```
-
-Create a virtual environment:
-
-```bash
+git clone https://github.com/alaa2026ali/holbertonschool-hbnb.git
+cd holbertonschool-hbnb/part3
 python3 -m venv venv
-```
-
-Activate the environment:
-
-```bash
-source venv/bin/activate
-```
-
-Install dependencies:
-
-```bash
+source venv/bin/activate   # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## Running the Application
+## Database Setup
 
-Start the Flask server:
+The `User` table must be created before the app can serve user-related requests:
 
 ```bash
-python3 run.py
+flask --app run.py shell
 ```
 
-The application will run on:
+```python
+from app import db
+db.create_all()
+exit()
+```
+
+This creates `instance/development.db` (SQLite).
+
+## Running the Application
+
+```bash
+flask --app run.py run
+```
+
+The API will be available at:
 
 ```
 http://127.0.0.1:5000
 ```
 
-## API Testing
+Swagger documentation (auto-generated by Flask-RESTX) is available at:
 
-The API can be tested using:
+```
+http://127.0.0.1:5000/api/v1/
+```
 
-* Postman
-* Curl
-* Automated tests
+## Authentication
 
-Example:
+### Login
 
+```
+POST /api/v1/auth/login
+```
+
+Body:
+```json
+{
+  "email": "user@example.com",
+  "password": "yourpassword"
+}
+```
+
+Returns a JWT access token. The token embeds an `is_admin` claim used by protected endpoints to determine permission level:
+
+```json
+{ "access_token": "..." }
+```
+
+Use it on protected requests as:
+
+```
+Authorization: Bearer <access_token>
+```
+
+### Permission levels
+
+| Level          | Description |
+|----------------|-------------|
+| Public         | No token required (e.g. listing/viewing resources). |
+| Authenticated  | Any logged-in user (`@jwt_required()`), restricted to their own resources. |
+| Admin          | User with `is_admin: true` — bypasses ownership checks and can access admin-only endpoints. |
+
+Passwords are hashed with Flask-Bcrypt before being stored and are never returned in API responses.
+
+## API Reference
+
+### Users — `/api/v1/users`
+
+| Method | Endpoint              | Auth              | Description                                                   |
+|--------|------------------------|-------------------|-----------------------------------------------------------------|
+| GET    | `/`                    | Public            | List all users.                                                 |
+| POST   | `/`                    | Admin only        | Create a new user.                                               |
+| GET    | `/<user_id>`           | Public            | Get a single user by ID.                                        |
+| PUT    | `/<user_id>`           | Owner or Admin    | Update a user. Regular users can't change email/password; admins can change any field, including email/password (with uniqueness check). |
+
+### Places — `/api/v1/places`
+
+| Method | Endpoint                    | Auth              | Description                                             |
+|--------|-------------------------------|-------------------|-----------------------------------------------------------|
+| GET    | `/`                            | Public            | List all places.                                          |
+| POST   | `/`                            | Authenticated     | Create a place (the logged-in user becomes the owner).    |
+| GET    | `/<place_id>`                  | Public            | Get a single place by ID.                                 |
+| PUT    | `/<place_id>`                  | Owner or Admin    | Update a place.                                            |
+| GET    | `/<place_id>/reviews`          | Public            | List all reviews for a specific place.                    |
+
+### Reviews — `/api/v1/reviews`
+
+| Method | Endpoint              | Auth              | Description                                                                 |
+|--------|------------------------|-------------------|-------------------------------------------------------------------------------|
+| GET    | `/`                    | Public            | List all reviews.                                                             |
+| POST   | `/`                    | Authenticated     | Create a review for a place. Can't review your own place or review the same place twice. |
+| GET    | `/<review_id>`         | Public            | Get a single review by ID.                                                    |
+| PUT    | `/<review_id>`         | Owner or Admin    | Update a review.                                                               |
+| DELETE | `/<review_id>`         | Owner or Admin    | Delete a review.                                                               |
+
+### Amenities — `/api/v1/amenities`
+
+| Method | Endpoint                 | Auth        | Description               |
+|--------|----------------------------|-------------|-----------------------------|
+| GET    | `/`                         | Public      | List all amenities.        |
+| POST   | `/`                         | Admin only  | Create a new amenity.      |
+| GET    | `/<amenity_id>`             | Public      | Get a single amenity by ID.|
+| PUT    | `/<amenity_id>`             | Admin only  | Update an amenity.         |
+
+### Auth — `/api/v1/auth`
+
+| Method | Endpoint   | Auth   | Description                          |
+|--------|-------------|--------|-----------------------------------------|
+| POST   | `/login`    | Public | Log in and receive a JWT access token.  |
+
+## Example Requests
+
+Login:
 ```bash
-curl http://127.0.0.1:5000/api/v1/users
+curl -X POST "http://127.0.0.1:5000/api/v1/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "admin@hbnb.com", "password": "adminpass123"}'
+```
+
+Create a user (admin only):
+```bash
+curl -X POST "http://127.0.0.1:5000/api/v1/users/" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <access_token>" \
+  -d '{"first_name": "John", "last_name": "Doe", "email": "john.doe@example.com", "password": "password123"}'
+```
+
+Create a place (authenticated user):
+```bash
+curl -X POST "http://127.0.0.1:5000/api/v1/places/" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <access_token>" \
+  -d '{"title": "Cozy Apartment", "price": 100, "latitude": 24.7, "longitude": 46.7, "owner_id": "ignored"}'
 ```
 
 ## Testing
 
-Run the test suite:
+Run the automated test suite:
 
 ```bash
 python3 -m pytest tests/ -v
 ```
 
-## Future Improvements
+See `TESTING_REPORT.md` for a detailed manual test log.
 
-Possible future improvements:
 
-* Front-end user interface.
-* Advanced search functionality.
-* Image upload support.
-* Payment integration.
-* Deployment using cloud services.
 
 ## Authors
 
