@@ -1,5 +1,11 @@
 # HBnB Database ER Diagram
 
+## Entity Relationship Diagram
+
+![ER Diagram](er_diagram.png)
+
+## Mermaid Source
+
 ```mermaid
 erDiagram
     USER ||--o{ PLACE : owns
