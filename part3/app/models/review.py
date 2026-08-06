@@ -1,36 +1,39 @@
-from .base_model import PlainBaseModel
-from .place import Place
-from .user import User
+from app import db
+from sqlalchemy.orm import validates
+
+from .base_model import BaseModel
 
 
-class Review(PlainBaseModel):
-    def __init__(self, text, rating, place, user):
-        super().__init__()
-        self.text = self.validate_text(text)
-        self.rating = self.validate_rating(rating)
-        self.place = self.validate_place(place)
-        self.user = self.validate_user(user)
+class Review(BaseModel):
+    """Review model mapped to the reviews table."""
 
-    @staticmethod
-    def validate_text(text):
-        if not text:
+    __tablename__ = "reviews"
+
+    text = db.Column(db.String(255), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+
+    place_id = db.Column(
+        db.String(36),
+        db.ForeignKey("places.id"),
+        nullable=False
+    )
+
+    user_id = db.Column(
+        db.String(36),
+        db.ForeignKey("users.id"),
+        nullable=False
+    )
+
+    @validates("text")
+    def validate_text(self, key, value):
+        if not value:
             raise ValueError("text is required")
-        return text
+        return value
 
-    @staticmethod
-    def validate_rating(rating):
-        if not isinstance(rating, int) or not (1 <= rating <= 5):
-            raise ValueError("rating must be an integer between 1 and 5")
-        return rating
-
-    @staticmethod
-    def validate_place(place):
-        if not isinstance(place, Place):
-            raise ValueError("place must be a valid Place instance")
-        return place
-
-    @staticmethod
-    def validate_user(user):
-        if not isinstance(user, User):
-            raise ValueError("user must be a valid User instance")
-        return user
+    @validates("rating")
+    def validate_rating(self, key, value):
+        if not isinstance(value, int) or not 1 <= value <= 5:
+            raise ValueError(
+                "rating must be an integer between 1 and 5"
+            )
+        return value

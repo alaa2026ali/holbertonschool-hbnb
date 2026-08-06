@@ -71,16 +71,27 @@ class SQLAlchemyRepository(Repository):
 
     def update(self, obj_id, data):
         obj = self.get(obj_id)
-        if obj:
-            for key, value in data.items():
+
+        if not obj:
+            return None
+
+        for key, value in data.items():
+            if hasattr(obj, key):
                 setattr(obj, key, value)
-            db.session.commit()
+
+        db.session.commit()
+        return obj
+
 
     def delete(self, obj_id):
         obj = self.get(obj_id)
-        if obj:
-            db.session.delete(obj)
-            db.session.commit()
+
+        if not obj:
+            return False
+
+        db.session.delete(obj)
+        db.session.commit()
+        return True
 
     def get_by_attribute(self, attr_name, attr_value):
         return self.model.query.filter_by(**{attr_name: attr_value}).first()

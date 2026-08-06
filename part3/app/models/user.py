@@ -14,13 +14,20 @@ class User(BaseModel):
     email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+    places = db.relationship(
+        "Place",
+        backref="owner",
+        lazy=True,
+        cascade="all, delete-orphan"
+    )
 
-    def __init__(self, *args, **kwargs):
-        # Kept in-memory for now; Place/Review aren't mapped yet
-        self.places = []
-        self.reviews = []
-        super().__init__(*args, **kwargs)
-
+    reviews = db.relationship(
+        "Review",
+        backref="author",
+        lazy=True,
+        cascade="all, delete-orphan"
+    )
+    
     @validates("first_name")
     def validate_first_name(self, key, value):
         if not value or len(value) > 50:
