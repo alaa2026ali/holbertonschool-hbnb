@@ -8,40 +8,44 @@
 </head>
 <body>
     <header>
-    <nav>
-        <a href="index.html">
-            <img src="images/logo.png" alt="HBnB Logo" class="logo">
-        </a>
+        <nav>
+            <a href="index.html">
+                <img src="images/logo.png" alt="HBnB Logo" class="logo">
+            </a>
+            <a href="login.html" class="login-button">Login</a>
+        </nav>
+    </header>
 
-        <a href="login.html" class="login-button">Login</a>
-    </nav>
-</header>
     <main>
-       <section class="place-info">
-    <h2>Cozy Apartment</h2>
-    <p>Price per night: $80</p>
-</section>
+        <section class="place-info">
+            <h2>Cozy Apartment</h2>
+            <p>Price per night: $80</p>
+        </section>
+
         <form id="review-form">
             <h2>Add a Review</h2>
+
             <label for="review">Your Review:</label>
             <textarea id="review" name="review" required></textarea>
+
             <label for="rating">Rating:</label>
-            
-               <select id="rating" name="rating" required>
-    <option value="">Select a rating</option>
-    <option value="1">1/5</option>
-    <option value="2">2/5</option>
-    <option value="3">3/5</option>
-    <option value="4">4/5</option>
-    <option value="5">5/5</option>
-</select>
-           
+            <select id="rating" name="rating" required>
+                <option value="">Select a rating</option>
+                <option value="1">1/5</option>
+                <option value="2">2/5</option>
+                <option value="3">3/5</option>
+                <option value="4">4/5</option>
+                <option value="5">5/5</option>
+            </select>
+
             <button type="submit">Submit Review</button>
         </form>
     </main>
+
     <footer>
-    <p>&copy; 2026 HBnB. All rights reserved.</p>
-</footer>
+        <p>&copy; 2026 HBnB. All rights reserved.</p>
+    </footer>
+
     <script src="scripts.js"></script>
 </body>
 </html>
