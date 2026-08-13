@@ -18,10 +18,10 @@ def client():
 
 
 @pytest.fixture
-def auth_token(client):
+def auth_data(client):
     email = f"{uuid.uuid4().hex}@test.com"
 
-    client.post(
+    response = client.post(
         "/api/v1/users/",
         json={
             "first_name": "Test",
@@ -31,7 +31,9 @@ def auth_token(client):
         }
     )
 
-    response = client.post(
+    assert response.status_code == 201
+
+    login_response = client.post(
         "/api/v1/auth/login",
         json={
             "email": email,
@@ -39,33 +41,19 @@ def auth_token(client):
         }
     )
 
-    return response.json["access_token"]
+    assert login_response.status_code == 200
+
+    return {
+        "token": login_response.json["access_token"],
+        "user_id": response.json["id"]
+    }
 
 
-def create_test_user(client):
-    email = f"{uuid.uuid4().hex}@example.com"
-
-    response = client.post(
-        "/api/v1/users/",
-        json={
-            "first_name": "Noura",
-            "last_name": "Fahad",
-            "email": email,
-            "password": "123456"
-        }
-    )
-
-    assert response.status_code == 201
-    return response.json
-
-
-def create_test_place(client, auth_token):
-    user = create_test_user(client)
-
+def create_test_place(client, auth_data):
     response = client.post(
         "/api/v1/places/",
         headers={
-            "Authorization": f"Bearer {auth_token}"
+            "Authorization": f"Bearer {auth_data['token']}"
         },
         json={
             "title": "Luxury Apartment",
@@ -73,7 +61,7 @@ def create_test_place(client, auth_token):
             "price": 350,
             "latitude": 24.7136,
             "longitude": 46.6753,
-            "owner_id": user["id"],
+            "owner_id": auth_data["user_id"],
             "amenities": []
         }
     )
@@ -82,13 +70,11 @@ def create_test_place(client, auth_token):
     return response.json
 
 
-def test_create_place_success(client, auth_token):
-    user = create_test_user(client)
-
+def test_create_place_success(client, auth_data):
     response = client.post(
         "/api/v1/places/",
         headers={
-            "Authorization": f"Bearer {auth_token}"
+            "Authorization": f"Bearer {auth_data['token']}"
         },
         json={
             "title": "Beach House",
@@ -96,7 +82,7 @@ def test_create_place_success(client, auth_token):
             "price": 500,
             "latitude": 24.7136,
             "longitude": 46.6753,
-            "owner_id": user["id"],
+            "owner_id": auth_data["user_id"],
             "amenities": []
         }
     )
@@ -104,16 +90,16 @@ def test_create_place_success(client, auth_token):
     assert response.status_code == 201
 
 
-def test_get_all_places_success(client, auth_token):
-    create_test_place(client, auth_token)
+def test_get_all_places_success(client, auth_data):
+    create_test_place(client, auth_data)
 
     response = client.get("/api/v1/places/")
 
     assert response.status_code == 200
 
 
-def test_get_place_by_id_success(client, auth_token):
-    place = create_test_place(client, auth_token)
+def test_get_place_by_id_success(client, auth_data):
+    place = create_test_place(client, auth_data)
 
     response = client.get(
         f"/api/v1/places/{place['id']}"
@@ -122,13 +108,13 @@ def test_get_place_by_id_success(client, auth_token):
     assert response.status_code == 200
 
 
-def test_update_place_success(client, auth_token):
-    place = create_test_place(client, auth_token)
+def test_update_place_success(client, auth_data):
+    place = create_test_place(client, auth_data)
 
     response = client.put(
         f"/api/v1/places/{place['id']}",
         headers={
-            "Authorization": f"Bearer {auth_token}"
+            "Authorization": f"Bearer {auth_data['token']}"
         },
         json={
             "title": "Updated Apartment",
@@ -139,12 +125,11 @@ def test_update_place_success(client, auth_token):
     assert response.status_code == 200
 
 
-def test_create_place_invalid_owner(client, auth_token):
-
+def test_create_place_invalid_owner(client, auth_data):
     response = client.post(
         "/api/v1/places/",
         headers={
-            "Authorization": f"Bearer {auth_token}"
+            "Authorization": f"Bearer {auth_data['token']}"
         },
         json={
             "title": "Invalid",
@@ -161,7 +146,6 @@ def test_create_place_invalid_owner(client, auth_token):
 
 
 def test_get_place_not_found(client):
-
     response = client.get(
         "/api/v1/places/not_found"
     )
@@ -169,12 +153,11 @@ def test_get_place_not_found(client):
     assert response.status_code == 404
 
 
-def test_update_place_not_found(client, auth_token):
-
+def test_update_place_not_found(client, auth_data):
     response = client.put(
         "/api/v1/places/not_found",
         headers={
-            "Authorization": f"Bearer {auth_token}"
+            "Authorization": f"Bearer {auth_data['token']}"
         },
         json={
             "title": "Updated"
