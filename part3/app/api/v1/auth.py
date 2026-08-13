@@ -17,15 +17,26 @@ class Login(Resource):
 
     @api.expect(login_model)
     def post(self):
-
         data = api.payload
 
-        user = facade.get_user_by_email(data['email'])
+        if not data:
+            api.abort(400, "Email and password are required")
+
+        email = data.get("email")
+        password = data.get("password")
+
+        if not email:
+            api.abort(400, "Email is required")
+
+        if not password:
+            api.abort(400, "Password is required")
+
+        user = facade.get_user_by_email(email)
 
         if not user:
             api.abort(401, "Invalid email or password")
 
-        if not user.verify_password(data['password']):
+        if not user.verify_password(password):
             api.abort(401, "Invalid email or password")
 
         token = create_access_token(
