@@ -1,14 +1,20 @@
 import uuid
 import pytest
-from run import app
+from app import create_app, db
+from config import TestingConfig
 
 
 @pytest.fixture
 def client():
-    app.config["TESTING"] = True
+    app = create_app(TestingConfig)
 
-    with app.test_client() as client:
-        yield client
+    with app.app_context():
+        db.create_all()
+
+        with app.test_client() as client:
+            yield client
+
+        db.drop_all()
 
 
 @pytest.fixture
