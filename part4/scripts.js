@@ -100,8 +100,9 @@ function displayPlaces(places) {
     placesList.innerHTML = '';
 
     places.forEach(place => {
-        const placeCard = document.createElement('article');
-        placeCard.className = 'place-card';
+       const placeCard = document.createElement('article');
+       placeCard.className = 'place-card';
+       placeCard.dataset.price = place.price;
 
         placeCard.innerHTML = `
             <h2>${place.title}</h2>
@@ -120,5 +121,43 @@ function displayPlaces(places) {
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('places-list')) {
         checkAuthentication();
+    }
+});
+
+function setupPriceFilter() {
+    const priceFilter = document.getElementById('price-filter');
+
+    const prices = [10, 50, 100, 'All'];
+
+    prices.forEach(price => {
+        const option = document.createElement('option');
+        option.value = price;
+        option.textContent = price === 'All' ? 'All' : `$${price}`;
+        priceFilter.appendChild(option);
+    });
+}
+
+function filterPlaces() {
+    const priceFilter = document.getElementById('price-filter');
+    const selectedPrice = priceFilter.value;
+    const placeCards = document.querySelectorAll('.place-card');
+
+    placeCards.forEach(card => {
+        const price = parseFloat(card.dataset.price);
+
+        if (selectedPrice === 'All' || price <= parseFloat(selectedPrice)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+document.addEventListener('DOMContentLoaded', () => {
+    setupPriceFilter();
+
+    const priceFilter = document.getElementById('price-filter');
+
+    if (priceFilter) {
+        priceFilter.addEventListener('change', filterPlaces);
     }
 });
