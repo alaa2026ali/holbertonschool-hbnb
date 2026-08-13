@@ -1,3 +1,4 @@
+```python
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -13,14 +14,25 @@ from app.api.v1 import api_v1_blueprint
 
 def create_app(config_class=config.DevelopmentConfig):
     app = Flask(__name__)
+
     # Load configuration
     app.config.from_object(config_class)
+
     # Initialize JWT
     jwt.init_app(app)
+
     # Initialize SQLAlchemy
     db.init_app(app)
+
     # Initialize Bcrypt
     bcrypt.init_app(app)
+
     # Register API v1 blueprint
     app.register_blueprint(api_v1_blueprint)
+
+    # Create database tables automatically
+    with app.app_context():
+        db.create_all()
+
     return app
+```
