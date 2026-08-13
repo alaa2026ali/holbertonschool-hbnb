@@ -71,3 +71,48 @@ function checkAuthentication() {
         fetchPlaces(token);
     }
 }
+
+async function fetchPlaces(token) {
+    try {
+        const response = await fetch(
+            'https://web-5000-195-68.cod-eu-west-3.hbtn.io/api/v1/places/',
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+
+        if (response.ok) {
+            const places = await response.json();
+            displayPlaces(places);
+        } else {
+            console.error('Failed to fetch places:', response.status);
+        }
+    } catch (error) {
+        console.error('Error fetching places:', error);
+    }
+}
+function displayPlaces(places) {
+    const placesList = document.getElementById('places-list');
+
+    placesList.innerHTML = '';
+
+    places.forEach(place => {
+        const placeCard = document.createElement('article');
+        placeCard.className = 'place-card';
+
+        placeCard.innerHTML = `
+            <h2>${place.title}</h2>
+            <p>Price per night: $${place.price}</p>
+            <p>${place.description}</p>
+            <p>Location: ${place.city}, ${place.country}</p>
+            <a href="place.html?id=${place.id}" class="details-button">
+                View Details
+            </a>
+        `;
+
+        placesList.appendChild(placeCard);
+    });
+}
