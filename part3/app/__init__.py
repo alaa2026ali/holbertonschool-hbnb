@@ -29,7 +29,7 @@ def create_app(config_class=config.DevelopmentConfig):
     # Register API v1 blueprint
     app.register_blueprint(api_v1_blueprint)
 
-    # Create database tables automatically
+    # Create database tables
     with app.app_context():
         db.create_all()
 
