@@ -1,4 +1,9 @@
-from app.persistence.repository import SQLAlchemyRepository
+```python
+from app.persistence.repository import (
+    PlaceRepository,
+    ReviewRepository,
+    AmenityRepository
+)
 from app.services.repositories.user_repository import UserRepository
 from app.models.user import User
 from app.models.amenity import Amenity
@@ -9,9 +14,10 @@ from app.models.review import Review
 class HBnBFacade:
     def __init__(self):
         self.user_repo = UserRepository()
-        self.amenity_repo = SQLAlchemyRepository(Amenity)
-        self.place_repo = SQLAlchemyRepository(Place)
-        self.review_repo = SQLAlchemyRepository(Review)
+
+        self.amenity_repo = AmenityRepository(Amenity)
+        self.place_repo = PlaceRepository(Place)
+        self.review_repo = ReviewRepository(Review)
 
     def create_user(self, user_data):
         user = User(**user_data)
@@ -83,7 +89,9 @@ class HBnBFacade:
             amenity = self.amenity_repo.get(amenity_id)
 
             if not amenity:
-                raise KeyError(f"Amenity not found: {amenity_id}")
+                raise KeyError(
+                    f"Amenity not found: {amenity_id}"
+                )
 
             place.amenities.append(amenity)
 
@@ -179,3 +187,4 @@ class HBnBFacade:
             raise KeyError("Place not found")
 
         return place.reviews
+```
