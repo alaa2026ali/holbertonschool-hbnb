@@ -95,12 +95,13 @@ class ReviewList(Resource):
         """Create a new review."""
 
         review_data = api.payload.copy()
+        current_user = get_jwt_identity()
 
-        user_id = review_data.get("user_id")
+        requested_user_id = review_data.get("user_id")
         place_id = review_data.get("place_id")
 
-        # Check that the user exists
-        user = facade.get_user(user_id)
+        # Check that the requested user exists
+        user = facade.get_user(requested_user_id)
 
         if not user:
             api.abort(400, "User not found")
@@ -111,15 +112,18 @@ class ReviewList(Resource):
         if not place:
             api.abort(400, "Place not found")
 
+        # Use the authenticated user as the review author
+        review_data["user_id"] = current_user
+
         # Prevent user from reviewing their own place
-        if place.owner.id == user_id:
+        if place.owner.id == current_user:
             api.abort(400, "You cannot review your own place")
 
         # Prevent duplicate reviews
         reviews = facade.get_reviews_by_place(place_id)
 
         for review in reviews:
-            if review.user.id == user_id:
+            if review.user.id == current_user:
                 api.abort(400, "You have already reviewed this place")
 
         try:
