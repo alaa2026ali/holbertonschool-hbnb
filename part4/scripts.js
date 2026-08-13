@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const response = await fetch(
-                    'http://127.0.0.1:5000/api/v1/auth/login',
+                'https://web-5000-195-68.cod-eu-west-3.hbtn.io/api/v1/auth/login',
                     {
                         method: 'POST',
                         headers: {
