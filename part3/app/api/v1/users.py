@@ -1,8 +1,11 @@
 from flask_jwt_extended import get_jwt_identity, get_jwt, jwt_required
 from flask_restx import Namespace, Resource, fields
+
 from app.services import facade
 
+
 api = Namespace("users", description="User operations")
+
 
 user_model = api.model(
     "User",
@@ -26,6 +29,7 @@ user_model = api.model(
     },
 )
 
+
 user_create_model = api.model(
     "UserCreate",
     {
@@ -47,6 +51,7 @@ user_create_model = api.model(
         ),
     },
 )
+
 
 user_update_model = api.model(
     "UserUpdate",
@@ -138,23 +143,28 @@ class UserResource(Resource):
         is_admin = current_user.get("is_admin", False)
         token_user_id = get_jwt_identity()
 
+        # Only the user themselves or an admin can update the user
         if not is_admin and token_user_id != user_id:
             api.abort(403, "Unauthorized action")
 
         update_data = api.payload.copy()
 
+        # Non-admin users cannot modify email or password
         if not is_admin:
-            update_data.pop("email", None)
-            update_data.pop("password", None)
+            if "email" in update_data or "password" in update_data:
+                api.abort(
+                    400,
+                    "You cannot modify email or password"
+                )
 
-        else:
-            email = update_data.get("email")
+        # Admin email validation
+        if is_admin and "email" in update_data:
+            email = update_data["email"]
 
-            if email:
-                existing_user = facade.get_user_by_email(email)
+            existing_user = facade.get_user_by_email(email)
 
-                if existing_user and existing_user.id != user_id:
-                    api.abort(400, "Email already in use")
+            if existing_user and existing_user.id != user_id:
+                api.abort(400, "Email already in use")
 
         try:
             facade.update_user(user_id, update_data)
