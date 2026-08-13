@@ -1,13 +1,21 @@
 import pytest
-from run import app
+
+from app import create_app, db
+from config import TestingConfig
 
 
 @pytest.fixture
 def client():
     """Create Flask test client."""
-    app.config["TESTING"] = True
-    with app.test_client() as client:
-        yield client
+    app = create_app(TestingConfig)
+
+    with app.app_context():
+        db.create_all()
+
+        with app.test_client() as client:
+            yield client
+
+        db.drop_all()
 
 
 # ==========================================================
