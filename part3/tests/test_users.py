@@ -113,6 +113,51 @@ def test_update_user_not_found(client):
         "email": "ali@example.com"
     }
 
-    response = client.put("/api/v1/users/non_existing_id", json=payload)
-    
+    response = client.put(
+        "/api/v1/users/non_existing_id",
+        json=payload
+    )
+
     assert response.status_code == 404
+
+
+# ==========================================================
+# Password Hashing Test Cases
+# ==========================================================
+
+def test_password_is_hashed(client):
+    payload = {
+        "first_name": "Hash",
+        "last_name": "Test",
+        "email": "hash_test@example.com",
+        "password": "123456"
+    }
+
+    response = client.post(
+        "/api/v1/users/",
+        json=payload
+    )
+
+    assert response.status_code == 201
+
+    user = response.json
+
+    # Password must not be returned in the response
+    assert "password" not in user
+
+
+def test_verify_password():
+    from app.models.user import User
+
+    user = User(
+        first_name="Test",
+        last_name="User",
+        email="verify@example.com",
+        password="temporary"
+    )
+
+    user.hash_password("123456")
+
+    assert user.password != "123456"
+    assert user.verify_password("123456") is True
+    assert user.verify_password("wrong_password") is False
