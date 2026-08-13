@@ -132,7 +132,7 @@ class ReviewResource(Resource):
         except (ValueError, KeyError) as error:
             api.abort(400, str(error))
 
-    @api.response(204, "Review deleted")
+    @api.response(200, "Review deleted")
     def delete(self, review_id):
         """Delete a review."""
         review = facade.get_review(review_id)
@@ -142,7 +142,7 @@ class ReviewResource(Resource):
 
         try:
             facade.delete_review(review_id)
-            return "", 204
+            return "", 200
 
         except KeyError as error:
             api.abort(404, str(error))
