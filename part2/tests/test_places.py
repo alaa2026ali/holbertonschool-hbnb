@@ -2,6 +2,7 @@ import uuid
 
 import pytest
 from run import app
+import time
 
 
 @pytest.fixture
@@ -99,6 +100,10 @@ def test_get_place_by_id_success(client):
 def test_update_place_success(client):
     place = create_test_place(client)
 
+    old_updated_at = place["updated_at"]
+
+    time.sleep(0.01)
+
     payload = {
         "title": "Updated Apartment",
         "price": 450
@@ -112,7 +117,7 @@ def test_update_place_success(client):
     assert response.status_code == 200
     assert response.json["title"] == "Updated Apartment"
     assert response.json["price"] == 450
-
+    assert response.json["updated_at"] != old_updated_at
 
 # ==========================================================
 # Validation Test Cases
