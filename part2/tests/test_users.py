@@ -1,5 +1,6 @@
 import pytest
 from run import app
+from app.models.user import User
 
 
 @pytest.fixture
@@ -105,4 +106,10 @@ def test_update_user_not_found(client):
         "email": "ali@example.com"
     }
 
-    response = client.put("/api/v1/users/non_existing_id", json=payload)
+    response = client.put(
+        "/api/v1/users/non_existing_id",
+        json=payload
+    )
+
+    assert response.status_code == 404
+
