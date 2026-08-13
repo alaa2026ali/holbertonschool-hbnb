@@ -3,7 +3,7 @@ from .user import User
 
 
 class Place(BaseModel):
-    def __init__(self, title, description, price, latitude, longitude, owner):
+def __init__(self, title, price, latitude, longitude, owner, description=None):
         super().__init__()
         self.title = self.validate_title(title)
         self.description = description  # optional
