@@ -1,4 +1,3 @@
-```python
 from app.persistence.repository import (
     PlaceRepository,
     ReviewRepository,
@@ -187,4 +186,3 @@ class HBnBFacade:
             raise KeyError("Place not found")
 
         return place.reviews
-```
