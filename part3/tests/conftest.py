@@ -1,7 +1,7 @@
 import pytest
 import uuid
 
-from app import create_app
+from app import create_app, db
 
 
 @pytest.fixture
@@ -9,8 +9,16 @@ def client():
     app = create_app()
     app.config["TESTING"] = True
 
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+
     with app.test_client() as client:
         yield client
+
+    with app.app_context():
+        db.session.remove()
+        db.drop_all()
 
 
 @pytest.fixture
@@ -42,3 +50,4 @@ def auth_token(client):
     assert response.status_code == 200
 
     return response.json["access_token"]
+
