@@ -1,6 +1,7 @@
 import pytest
 from run import app
 from unittest.mock import patch
+from app.models.amenity import Amenity
 
 
 @pytest.fixture
@@ -136,3 +137,41 @@ def test_update_amenity_not_found(client):
             f'/api/v1/amenities/{non_existent_id}',
             json=payload
         )
+
+        assert response.status_code == 404
+        assert "Amenity not found" in response.json.get(
+            'message',
+            ''
+        )
+
+
+# ==============================================================================
+# 3. AMENITY MODEL TESTS
+# ==============================================================================
+
+def test_amenity_model_valid_name():
+    """Tests that Amenity accepts a valid name."""
+    amenity = Amenity("WiFi")
+
+    assert amenity.name == "WiFi"
+    assert amenity.id is not None
+    assert amenity.created_at is not None
+    assert amenity.updated_at is not None
+
+
+def test_amenity_model_empty_name():
+    """Tests that Amenity rejects an empty name."""
+    with pytest.raises(ValueError):
+        Amenity("")
+
+
+def test_amenity_model_none_name():
+    """Tests that Amenity rejects None as a name."""
+    with pytest.raises(ValueError):
+        Amenity(None)
+
+
+def test_amenity_model_long_name():
+    """Tests that Amenity rejects names longer than 50 characters."""
+    with pytest.raises(ValueError):
+        Amenity("A" * 51)
