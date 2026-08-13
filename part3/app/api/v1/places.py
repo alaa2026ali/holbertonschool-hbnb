@@ -126,7 +126,6 @@ class PlaceList(Resource):
     def get(self):
         """Retrieve the list of all places."""
         return facade.get_all_places(), 200
-
     @api.expect(place_create_model, validate=True)
     @api.marshal_with(place_model, code=201)
     @jwt_required()
@@ -134,10 +133,11 @@ class PlaceList(Resource):
         """Create a new place."""
 
         place_data = api.payload.copy()
-        current_user = get_jwt_identity()
 
-        # Ignore owner_id from request
-        place_data["owner_id"] = current_user
+        owner_id = place_data.get("owner_id")
+
+        if not facade.get_user(owner_id):
+            api.abort(400, "Invalid owner_id")
 
         try:
             place = facade.create_place(place_data)
