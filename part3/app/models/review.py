@@ -24,10 +24,7 @@ class Review(BaseModel):
         nullable=False
     )
 
-    user = db.relationship(
-        "User",
-        backref="reviews"
-    )
+    user = db.relationship("User")
 
     @validates("text")
     def validate_text(self, key, value):
