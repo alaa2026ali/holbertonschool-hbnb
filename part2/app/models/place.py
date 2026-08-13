@@ -3,17 +3,25 @@ from .user import User
 
 
 class Place(BaseModel):
-def __init__(self, title, price, latitude, longitude, owner, description=None):
+    def __init__(
+        self,
+        title,
+        price,
+        latitude,
+        longitude,
+        owner,
+        description=None
+    ):
         super().__init__()
         self.title = self.validate_title(title)
-        self.description = description  # optional
+        self.description = description
         self.price = self.validate_price(price)
         self.latitude = self.validate_latitude(latitude)
         self.longitude = self.validate_longitude(longitude)
         self.owner = self.validate_owner(owner)
-        self.reviews = []    # list of Review instances
-        self.amenities = []  # list of Amenity instances
-
+        self.reviews = []
+        self.amenities = []
+       
     @staticmethod
     def validate_title(title):
         if not title or len(title) > 100:
