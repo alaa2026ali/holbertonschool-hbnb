@@ -1,1 +1,3 @@
-# Database files*.dbinstance/
+# Database files
+*.db
+instance/
