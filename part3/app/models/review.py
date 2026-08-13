@@ -29,11 +29,6 @@ class Review(BaseModel):
         backref="reviews"
     )
 
-    place = db.relationship(
-        "Place",
-        backref="reviews"
-    )
-
     @validates("text")
     def validate_text(self, key, value):
         if not value:
