@@ -4,5 +4,13 @@
 */
 
 document.addEventListener('DOMContentLoaded', () => {
-    /* DO SOMETHING */
-  });
+    const loginForm = document.getElementById('login-form');
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            console.log('Login form submitted');
+        });
+    }
+});
