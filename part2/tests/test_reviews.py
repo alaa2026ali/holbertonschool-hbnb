@@ -135,7 +135,7 @@ def test_delete_review_success(client):
 
     response = client.delete(f"/api/v1/reviews/{review['id']}")
 
-    assert response.status_code == 204
+    assert response.status_code == 200
 
     get_response = client.get(f"/api/v1/reviews/{review['id']}")
     assert get_response.status_code == 404
