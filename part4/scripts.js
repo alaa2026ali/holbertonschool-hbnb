@@ -108,7 +108,6 @@ function displayPlaces(places) {
             <h2>${place.title}</h2>
             <p>Price per night: $${place.price}</p>
             <p>${place.description}</p>
-            <p>Location: ${place.city}, ${place.country}</p>
             <a href="place.html?id=${place.id}" class="details-button">
                 View Details
             </a>
