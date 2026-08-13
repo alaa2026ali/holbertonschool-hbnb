@@ -5,6 +5,7 @@ from app.services import facade
 
 api = Namespace("reviews", description="Review operations")
 
+
 review_user_model = api.model("ReviewUser", {
     "id": fields.String(
         readOnly=True,
@@ -21,6 +22,7 @@ review_user_model = api.model("ReviewUser", {
     )
 })
 
+
 review_place_model = api.model("ReviewPlace", {
     "id": fields.String(
         readOnly=True,
@@ -30,6 +32,7 @@ review_place_model = api.model("ReviewPlace", {
         description="Title of the place"
     )
 })
+
 
 review_model = api.model("Review", {
     "id": fields.String(
@@ -45,6 +48,7 @@ review_model = api.model("Review", {
     "user": fields.Nested(review_user_model),
     "place": fields.Nested(review_place_model)
 })
+
 
 review_create_model = api.model("ReviewCreate", {
     "text": fields.String(
@@ -64,6 +68,7 @@ review_create_model = api.model("ReviewCreate", {
         description="The unique identifier of the place"
     )
 })
+
 
 review_update_model = api.model("ReviewUpdate", {
     "text": fields.String(
@@ -88,24 +93,36 @@ class ReviewList(Resource):
     @jwt_required()
     def post(self):
         """Create a new review."""
-        review_data = api.payload.copy()
-        current_user = get_jwt_identity()
 
-        # Ignore user_id from request
-        review_data["user_id"] = current_user
+        review_data = api.payload.copy()
+
+        user_id = review_data.get("user_id")
+        place_id = review_data.get("place_id")
+
+        # Check that the user exists
+        user = facade.get_user(user_id)
+
+        if not user:
+            api.abort(400, "User not found")
+
+        # Check that the place exists
+        place = facade.get_place(place_id)
+
+        if not place:
+            api.abort(400, "Place not found")
+
+        # Prevent user from reviewing their own place
+        if place.owner.id == user_id:
+            api.abort(400, "You cannot review your own place")
+
+        # Prevent duplicate reviews
+        reviews = facade.get_reviews_by_place(place_id)
+
+        for review in reviews:
+            if review.user.id == user_id:
+                api.abort(400, "You have already reviewed this place")
 
         try:
-            place = facade.get_place(review_data["place_id"])
-
-            if place.owner.id == current_user:
-                api.abort(400, "You cannot review your own place")
-
-            reviews = facade.get_reviews_by_place(review_data["place_id"])
-
-            for review in reviews:
-                if review.user.id == current_user:
-                    api.abort(400, "You have already reviewed this place")
-
             review = facade.create_review(review_data)
             return review, 201
 
@@ -120,6 +137,7 @@ class ReviewResource(Resource):
     @api.marshal_with(review_model)
     def get(self, review_id):
         """Retrieve a review by ID."""
+
         review = facade.get_review(review_id)
 
         if not review:
@@ -132,6 +150,7 @@ class ReviewResource(Resource):
     @jwt_required()
     def put(self, review_id):
         """Update an existing review."""
+
         review = facade.get_review(review_id)
 
         if not review:
@@ -155,6 +174,7 @@ class ReviewResource(Resource):
     @jwt_required()
     def delete(self, review_id):
         """Delete a review."""
+
         review = facade.get_review(review_id)
 
         if not review:
