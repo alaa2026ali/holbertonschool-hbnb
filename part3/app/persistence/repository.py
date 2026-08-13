@@ -44,6 +44,7 @@ class InMemoryRepository(Repository):
 
     def update(self, obj_id, data):
         obj = self.get(obj_id)
+
         if obj:
             obj.update(data)
 
@@ -52,7 +53,14 @@ class InMemoryRepository(Repository):
             del self._storage[obj_id]
 
     def get_by_attribute(self, attr_name, attr_value):
-        return next((obj for obj in self._storage.values() if getattr(obj, attr_name) == attr_value), None)
+        return next(
+            (
+                obj
+                for obj in self._storage.values()
+                if getattr(obj, attr_name) == attr_value
+            ),
+            None
+        )
 
 
 class SQLAlchemyRepository(Repository):
@@ -82,7 +90,6 @@ class SQLAlchemyRepository(Repository):
         db.session.commit()
         return obj
 
-
     def delete(self, obj_id):
         obj = self.get(obj_id)
 
@@ -94,4 +101,37 @@ class SQLAlchemyRepository(Repository):
         return True
 
     def get_by_attribute(self, attr_name, attr_value):
-        return self.model.query.filter_by(**{attr_name: attr_value}).first()
+        return self.model.query.filter_by(
+            **{attr_name: attr_value}
+        ).first()
+
+
+class PlaceRepository(SQLAlchemyRepository):
+    """Repository for Place entities."""
+
+    def __init__(self, model):
+        super().__init__(model)
+
+
+class ReviewRepository(SQLAlchemyRepository):
+    """Repository for Review entities."""
+
+    def __init__(self, model):
+        super().__init__(model)
+
+
+class AmenityRepository(SQLAlchemyRepository):
+    """Repository for Amenity entities."""
+
+    def __init__(self, model):
+        super().__init__(model)
+
+
+class UserRepository(SQLAlchemyRepository):
+    """Repository for User entities."""
+
+    def __init__(self, model):
+        super().__init__(model)
+
+    def get_user_by_email(self, email):
+        return self.model.query.filter_by(email=email).first()
