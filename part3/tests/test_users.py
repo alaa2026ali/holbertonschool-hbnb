@@ -16,7 +16,30 @@ def client():
             yield client
 
         db.drop_all()
+def get_auth_token(client):
+    """Create a user and return a JWT token."""
 
+    client.post(
+        "/api/v1/users/",
+        json={
+            "first_name": "Auth",
+            "last_name": "Test",
+            "email": "auth_test@example.com",
+            "password": "123456"
+        }
+    )
+
+    response = client.post(
+        "/api/v1/auth/login",
+        json={
+            "email": "auth_test@example.com",
+            "password": "123456"
+        }
+    )
+
+    assert response.status_code == 200
+
+    return response.json["access_token"]
 
 # ==========================================================
 # Success Test Cases
@@ -115,6 +138,8 @@ def test_get_user_not_found(client):
 
 
 def test_update_user_not_found(client):
+    token = get_auth_token(client)
+
     payload = {
         "first_name": "Ali",
         "last_name": "Alharbi",
@@ -123,7 +148,10 @@ def test_update_user_not_found(client):
 
     response = client.put(
         "/api/v1/users/non_existing_id",
-        json=payload
+        json=payload,
+        headers={
+            "Authorization": f"Bearer {token}"
+        }
     )
 
     assert response.status_code == 404
