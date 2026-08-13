@@ -116,3 +116,9 @@ function displayPlaces(places) {
         placesList.appendChild(placeCard);
     });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('places-list')) {
+        checkAuthentication();
+    }
+});
