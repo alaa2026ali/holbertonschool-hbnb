@@ -256,7 +256,6 @@ function checkPlaceAuthentication() {
 
     fetchPlaceDetails(token, placeId);
 }
-
 function displayPlaceDetails(place) {
     const placeDetails =
         document.getElementById('place-details');
