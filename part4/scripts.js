@@ -458,17 +458,24 @@ function displayReviews(reviews) {
 
 function getUserIdFromToken(token) {
     try {
-        const payload =
-            token.split('.')[1];
+        const parts = token.split('.');
 
-        const decodedPayload =
-            JSON.parse(
-                atob(
-                    payload
-                        .replace(/-/g, '+')
-                        .replace(/_/g, '/')
-                )
-            );
+        if (parts.length !== 3) {
+            console.error('Invalid JWT token');
+            return null;
+        }
+
+        const payload = parts[1];
+
+        const decodedPayload = JSON.parse(
+            atob(
+                payload
+                    .replace(/-/g, '+')
+                    .replace(/_/g, '/')
+            )
+        );
+
+        console.log('JWT payload:', decodedPayload);
 
         return decodedPayload.sub;
 
@@ -493,72 +500,52 @@ async function submitReview(
     reviewText,
     rating
 ) {
-    const userId =
-        getUserIdFromToken(token);
+    const userId = getUserIdFromToken(token);
 
     if (!userId) {
-        alert(
-            'Unable to identify the current user.'
-        );
+        alert('Unable to identify the current user.');
+        return false;
+    }
 
+    if (!placeId) {
+        alert('Place ID is missing.');
         return false;
     }
 
     try {
-        console.log('Sending review...');
-        console.log('User ID:', userId);
-        console.log('Place ID:', placeId);
-        console.log('Review:', reviewText);
-        console.log('Rating:', rating);
-
         const response = await fetch(
             'https://web-5000-65-220.cod-eu-west-3.hbtn.io/api/v1/reviews/',
             {
                 method: 'POST',
 
                 headers: {
-                    'Content-Type':
-                        'application/json',
-
-                    'Authorization':
-                        `Bearer ${token}`
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
 
                 body: JSON.stringify({
                     text: reviewText,
-
-                    rating:
-                        parseInt(
-                            rating,
-                            10
-                        ),
-
-                    user_id:
-                        userId,
-
-                    place_id:
-                        placeId
+                    rating: parseInt(rating, 10),
+                    user_id: userId,
+                    place_id: placeId
                 })
             }
         );
 
         console.log(
-            'Response status:',
+            'Review response status:',
             response.status
         );
 
+        const data = await response.json();
+
+        console.log(
+            'Review response:',
+            data
+        );
+
         if (response.ok) {
-            const data =
-                await response.json();
-
-            console.log(
-                'Review created successfully:',
-                data
-            );
-
-            alert(
-                'Review submitted successfully!'
-            );
+            alert('Review submitted successfully!');
 
             window.location.href =
                 `place.html?id=${encodeURIComponent(placeId)}`;
@@ -566,19 +553,12 @@ async function submitReview(
             return true;
         }
 
-        const error =
-            await response.json();
-
-        console.error(
-            'Review error:',
-            error
-        );
-
         alert(
             'Failed to submit review: ' +
             (
-                error.message ||
-                error.msg ||
+                data.message ||
+                data.msg ||
+                data.error ||
                 'Unknown error'
             )
         );
@@ -600,6 +580,120 @@ async function submitReview(
 }
 
 
+/* =========================
+   REVIEW FORM
+========================= */
+
+function setupReviewForm() {
+
+    const reviewForm =
+        document.getElementById('review-form');
+
+    if (!reviewForm) {
+        return;
+    }
+
+    const token =
+        getCookie('token');
+
+    if (!token) {
+        alert('Please login first.');
+
+        window.location.href =
+            'login.html';
+
+        return;
+    }
+
+    const placeId =
+        getPlaceIdFromURL();
+
+    console.log(
+        'Place ID from URL:',
+        placeId
+    );
+
+    if (!placeId) {
+        alert('Place ID is missing.');
+
+        return;
+    }
+
+    reviewForm.addEventListener(
+        'submit',
+        async function(event) {
+
+            event.preventDefault();
+
+            const reviewInput =
+                document.getElementById('review');
+
+            const ratingInput =
+                document.getElementById('rating');
+
+            if (!reviewInput || !ratingInput) {
+                console.error(
+                    'Review or rating input not found.'
+                );
+
+                return;
+            }
+
+            const reviewText =
+                reviewInput.value.trim();
+
+            const rating =
+                ratingInput.value;
+
+            if (!reviewText) {
+                alert(
+                    'Please enter a review.'
+                );
+
+                return;
+            }
+
+            if (!rating) {
+                alert(
+                    'Please select a rating.'
+                );
+
+                return;
+            }
+
+            console.log(
+                'Submitting review with:'
+            );
+
+            console.log(
+                'Place ID:',
+                placeId
+            );
+
+            console.log(
+                'Rating:',
+                rating
+            );
+
+            console.log(
+                'Review:',
+                reviewText
+            );
+
+            const success =
+                await submitReview(
+                    token,
+                    placeId,
+                    reviewText,
+                    rating
+                );
+
+            if (success) {
+                reviewForm.reset();
+            }
+        }
+    );
+}
 /* =========================
    REVIEW FORM
 ========================= */
