@@ -378,3 +378,116 @@ document.addEventListener('DOMContentLoaded', () => {
         checkPlaceAuthentication();
     }
 });
+function getUserIdFromToken(token) {
+    try {
+        const payload = token.split('.')[1];
+        const decodedPayload = JSON.parse(
+            atob(payload.replace(/-/g, '+').replace(/_/g, '/'))
+        );
+
+        return decodedPayload.sub;
+    } catch (error) {
+        console.error('Failed to decode token:', error);
+        return null;
+    }
+}
+
+async function submitReview(token, placeId, reviewText, rating) {
+    const userId = getUserIdFromToken(token);
+
+    if (!userId) {
+        alert('Unable to identify the current user.');
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            'https://web-5000-65-220.cod-eu-west-3.hbtn.io/api/v1/reviews/',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    text: reviewText,
+                    rating: parseInt(rating, 10),
+                    user_id: userId,
+                    place_id: placeId
+                })
+            }
+        );
+
+        if (response.ok) {
+            alert('Review submitted successfully!');
+            return true;
+        }
+
+        const error = await response.json();
+
+        alert(
+            'Failed to submit review: ' +
+            (error.message || error.msg || 'Unknown error')
+        );
+
+        return false;
+    } catch (error) {
+        console.error('Error submitting review:', error);
+        alert('An error occurred while submitting the review.');
+        return false;
+    }
+}
+
+function setupReviewForm() {
+    const reviewForm = document.getElementById('review-form');
+
+    if (!reviewForm) {
+        return;
+    }
+
+    const token = getCookie('token');
+
+    if (!token) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    const placeId = getPlaceIdFromURL();
+
+    if (!placeId) {
+        alert('Place ID is missing.');
+        return;
+    }
+
+    reviewForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const reviewText =
+            document.getElementById('review').value.trim();
+
+        const rating =
+            document.getElementById('rating').value;
+
+        if (!reviewText || !rating) {
+            alert('Please enter a review and select a rating.');
+            return;
+        }
+
+        const success = await submitReview(
+            token,
+            placeId,
+            reviewText,
+            rating
+        );
+
+        if (success) {
+            reviewForm.reset();
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('review-form')) {
+        setupReviewForm();
+    }
+});
