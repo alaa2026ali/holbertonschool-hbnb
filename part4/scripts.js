@@ -1,4 +1,4 @@
-/* 
+/*
   This is a SAMPLE FILE to get you started.
   Please, follow the project instructions to complete the tasks.
 */
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const response = await fetch(
-                'https://web-5000-195-68.cod-eu-west-3.hbtn.io/api/v1/auth/login',
+                    'https://web-5000-65-220.cod-eu-west-3.hbtn.io/api/v1/auth/login',
                     {
                         method: 'POST',
                         headers: {
@@ -75,7 +75,7 @@ function checkAuthentication() {
 async function fetchPlaces(token) {
     try {
         const response = await fetch(
-            'https://web-5000-195-68.cod-eu-west-3.hbtn.io/api/v1/places/',
+            'https://web-5000-65-220.cod-eu-west-3.hbtn.io/api/v1/places/',
             {
                 method: 'GET',
                 headers: {
@@ -94,15 +94,16 @@ async function fetchPlaces(token) {
         console.error('Error fetching places:', error);
     }
 }
+
 function displayPlaces(places) {
     const placesList = document.getElementById('places-list');
 
     placesList.innerHTML = '';
 
     places.forEach(place => {
-       const placeCard = document.createElement('article');
-       placeCard.className = 'place-card';
-       placeCard.dataset.price = place.price;
+        const placeCard = document.createElement('article');
+        placeCard.className = 'place-card';
+        placeCard.dataset.price = place.price;
 
         placeCard.innerHTML = `
             <h2>${place.title}</h2>
@@ -117,16 +118,16 @@ function displayPlaces(places) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('places-list')) {
-        checkAuthentication();
-    }
-});
-
 function setupPriceFilter() {
     const priceFilter = document.getElementById('price-filter');
 
+    if (!priceFilter) {
+        return;
+    }
+
     const prices = [10, 50, 100, 'All'];
+
+    priceFilter.innerHTML = '';
 
     prices.forEach(price => {
         const option = document.createElement('option');
@@ -144,22 +145,17 @@ function filterPlaces() {
     placeCards.forEach(card => {
         const price = parseFloat(card.dataset.price);
 
-        if (selectedPrice === 'All' || price <= parseFloat(selectedPrice)) {
+        if (
+            selectedPrice === 'All' ||
+            price <= parseFloat(selectedPrice)
+        ) {
             card.style.display = 'block';
         } else {
             card.style.display = 'none';
         }
     });
 }
-document.addEventListener('DOMContentLoaded', () => {
-    setupPriceFilter();
 
-    const priceFilter = document.getElementById('price-filter');
-
-    if (priceFilter) {
-        priceFilter.addEventListener('change', filterPlaces);
-    }
-});
 function getPlaceIdFromURL() {
     const params = new URLSearchParams(window.location.search);
     return params.get('id');
@@ -168,7 +164,7 @@ function getPlaceIdFromURL() {
 async function fetchPlaceDetails(token, placeId) {
     try {
         const response = await fetch(
-            `https://web-5000-195-68.cod-eu-west-3.hbtn.io/api/v1/places/${placeId}`,
+            `https://web-5000-65-220.cod-eu-west-3.hbtn.io/api/v1/places/${placeId}`,
             {
                 method: 'GET',
                 headers: token
@@ -183,16 +179,27 @@ async function fetchPlaceDetails(token, placeId) {
             const place = await response.json();
             displayPlaceDetails(place);
         } else {
-            console.error('Failed to fetch place details:', response.status);
+            console.error(
+                'Failed to fetch place details:',
+                response.status
+            );
         }
     } catch (error) {
-        console.error('Error fetching place details:', error);
+        console.error(
+            'Error fetching place details:',
+            error
+        );
     }
 }
+
 function checkPlaceAuthentication() {
     const token = getCookie('token');
     const placeId = getPlaceIdFromURL();
     const addReviewSection = document.getElementById('add-review');
+
+    if (!addReviewSection) {
+        return;
+    }
 
     if (!token) {
         addReviewSection.style.display = 'none';
@@ -204,8 +211,13 @@ function checkPlaceAuthentication() {
         fetchPlaceDetails(token, placeId);
     }
 }
+
 function displayPlaceDetails(place) {
     const placeDetails = document.getElementById('place-details');
+
+    if (!placeDetails) {
+        return;
+    }
 
     placeDetails.innerHTML = `
         <h1>${place.title}</h1>
@@ -229,6 +241,21 @@ function displayPlaceDetails(place) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('login-form')) {
+        return;
+    }
+
+    if (document.getElementById('places-list')) {
+        setupPriceFilter();
+        checkAuthentication();
+
+        const priceFilter = document.getElementById('price-filter');
+
+        if (priceFilter) {
+            priceFilter.addEventListener('change', filterPlaces);
+        }
+    }
+
     if (document.getElementById('place-details')) {
         checkPlaceAuthentication();
     }
