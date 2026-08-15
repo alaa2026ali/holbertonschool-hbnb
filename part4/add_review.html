@@ -6,31 +6,29 @@
     <title>Add Review</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
+
     <header>
-        <nav>
-            <a href="index.html">
-                <img src="images/logo.png" alt="HBnB Logo" class="logo">
-            </a>
-            <a href="login.html" class="login-button">Login</a>
-        </nav>
+        <h1>Add a Review</h1>
     </header>
 
     <main>
-        <section class="place-info">
-            <h2>Cozy Apartment</h2>
-            <p>Price per night: $80</p>
-        </section>
-
         <form id="review-form">
-            <h2>Add a Review</h2>
 
-            <label for="review">Your Review:</label>
-            <textarea id="review" name="review" required></textarea>
+            <label for="review">Review:</label>
+
+            <textarea
+                id="review"
+                name="review"
+                placeholder="Write your review..."
+                required
+            ></textarea>
 
             <label for="rating">Rating:</label>
+
             <select id="rating" name="rating" required>
-                <option value="">Select a rating</option>
+                <option value="">Select rating</option>
                 <option value="1">1/5</option>
                 <option value="2">2/5</option>
                 <option value="3">3/5</option>
@@ -38,14 +36,18 @@
                 <option value="5">5/5</option>
             </select>
 
-            <button type="submit">Submit Review</button>
+            <button type="submit">
+                Submit Review
+            </button>
+
         </form>
+
+        <a href="index.html">
+            Back to Home
+        </a>
     </main>
 
-    <footer>
-        <p>&copy; 2026 HBnB. All rights reserved.</p>
-    </footer>
-
     <script src="scripts.js"></script>
+
 </body>
 </html>
