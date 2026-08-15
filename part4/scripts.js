@@ -223,7 +223,6 @@ async function fetchPlaceDetails(token, placeId) {
     }
 }
 
-
 function checkPlaceAuthentication() {
     const token = getCookie('token');
     const placeId = getPlaceIdFromURL();
@@ -247,11 +246,18 @@ function checkPlaceAuthentication() {
         }
     }
 
-    if (reviewLink) {
-        reviewLink.href =
+    if (reviewLink && token) {
+        const reviewUrl =
             `add_review.html?id=${encodeURIComponent(placeId)}`;
 
-        console.log('Review link:', reviewLink.href);
+        reviewLink.href = reviewUrl;
+
+        reviewLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            window.location.href = reviewUrl;
+        });
+
+        console.log('Review URL:', reviewUrl);
     }
 
     fetchPlaceDetails(token, placeId);
