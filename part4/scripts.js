@@ -234,6 +234,11 @@ function checkPlaceAuthentication() {
     const reviewLink =
         document.getElementById('add-review-link');
 
+    if (!placeId) {
+        console.error('Place ID is missing from URL');
+        return;
+    }
+
     if (addReviewSection) {
         if (!token) {
             addReviewSection.style.display = 'none';
@@ -242,15 +247,15 @@ function checkPlaceAuthentication() {
         }
     }
 
-    if (reviewLink && placeId) {
-        reviewLink.href = `add_review.html?id=${placeId}`;
+    if (reviewLink) {
+        reviewLink.href =
+            `add_review.html?id=${encodeURIComponent(placeId)}`;
+
+        console.log('Review link:', reviewLink.href);
     }
 
-    if (placeId) {
-        fetchPlaceDetails(token, placeId);
-    }
+    fetchPlaceDetails(token, placeId);
 }
-
 
 function displayPlaceDetails(place) {
     const placeDetails =
