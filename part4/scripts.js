@@ -227,8 +227,12 @@ async function fetchPlaceDetails(token, placeId) {
 function checkPlaceAuthentication() {
     const token = getCookie('token');
     const placeId = getPlaceIdFromURL();
+
     const addReviewSection =
         document.getElementById('add-review');
+
+    const reviewLink =
+        document.getElementById('add-review-link');
 
     if (addReviewSection) {
         if (!token) {
@@ -236,6 +240,10 @@ function checkPlaceAuthentication() {
         } else {
             addReviewSection.style.display = 'block';
         }
+    }
+
+    if (reviewLink && placeId) {
+        reviewLink.href = `add_review.html?id=${placeId}`;
     }
 
     if (placeId) {
