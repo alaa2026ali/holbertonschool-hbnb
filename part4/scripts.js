@@ -160,3 +160,76 @@ document.addEventListener('DOMContentLoaded', () => {
         priceFilter.addEventListener('change', filterPlaces);
     }
 });
+function getPlaceIdFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('id');
+}
+
+async function fetchPlaceDetails(token, placeId) {
+    try {
+        const response = await fetch(
+            `https://web-5000-195-68.cod-eu-west-3.hbtn.io/api/v1/places/${placeId}`,
+            {
+                method: 'GET',
+                headers: token
+                    ? {
+                        'Authorization': `Bearer ${token}`
+                    }
+                    : {}
+            }
+        );
+
+        if (response.ok) {
+            const place = await response.json();
+            displayPlaceDetails(place);
+        } else {
+            console.error('Failed to fetch place details:', response.status);
+        }
+    } catch (error) {
+        console.error('Error fetching place details:', error);
+    }
+}
+function checkPlaceAuthentication() {
+    const token = getCookie('token');
+    const placeId = getPlaceIdFromURL();
+    const addReviewSection = document.getElementById('add-review');
+
+    if (!token) {
+        addReviewSection.style.display = 'none';
+    } else {
+        addReviewSection.style.display = 'block';
+    }
+
+    if (placeId) {
+        fetchPlaceDetails(token, placeId);
+    }
+}
+function displayPlaceDetails(place) {
+    const placeDetails = document.getElementById('place-details');
+
+    placeDetails.innerHTML = `
+        <h1>${place.title}</h1>
+
+        <div class="place-info">
+            <p><strong>Price per night:</strong> $${place.price}</p>
+            <p><strong>Description:</strong> ${place.description}</p>
+
+            <p><strong>Amenities:</strong></p>
+            <ul>
+                ${
+                    place.amenities && place.amenities.length
+                        ? place.amenities.map(amenity =>
+                            `<li>${amenity.name || amenity}</li>`
+                        ).join('')
+                        : '<li>No amenities listed</li>'
+                }
+            </ul>
+        </div>
+    `;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('place-details')) {
+        checkPlaceAuthentication();
+    }
+});
