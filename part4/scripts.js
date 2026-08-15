@@ -87,6 +87,7 @@ async function fetchPlaces(token) {
         if (response.ok) {
             const places = await response.json();
             displayPlaces(places);
+          fetchReviews(placeId, token);
         } else {
             console.error('Failed to fetch places:', response.status);
         }
@@ -260,3 +261,49 @@ document.addEventListener('DOMContentLoaded', () => {
         checkPlaceAuthentication();
     }
 });
+async function fetchReviews(placeId, token) {
+    try {
+        const response = await fetch(
+            `https://web-5000-65-220.cod-eu-west-3.hbtn.io/api/v1/places/${placeId}/reviews`,
+            {
+                method: 'GET',
+                headers: token
+                    ? {
+                        'Authorization': `Bearer ${token}`
+                    }
+                    : {}
+            }
+        );
+
+        if (response.ok) {
+            const reviews = await response.json();
+            displayReviews(reviews);
+        } else {
+            console.error('Failed to fetch reviews:', response.status);
+        }
+    } catch (error) {
+        console.error('Error fetching reviews:', error);
+    }
+}
+function displayReviews(reviews) {
+    const reviewsSection = document.getElementById('reviews');
+
+    if (!reviewsSection) {
+        return;
+    }
+
+    reviewsSection.innerHTML = '<h2>Reviews</h2>';
+
+    reviews.forEach(review => {
+        const reviewCard = document.createElement('article');
+        reviewCard.className = 'review-card';
+
+        reviewCard.innerHTML = `
+            <p><strong>User:</strong> ${review.user_id}</p>
+            <p>${review.text}</p>
+            <p>Rating: ${review.rating}/5</p>
+        `;
+
+        reviewsSection.appendChild(reviewCard);
+    });
+}
