@@ -467,6 +467,9 @@ function setupReviewForm() {
 
     const placeId = getPlaceIdFromURL();
 
+    console.log('Place ID from URL:', placeId);
+    console.log('Current URL:', window.location.href);
+
     if (!placeId) {
         alert('Place ID is missing.');
         return;
@@ -486,6 +489,11 @@ function setupReviewForm() {
             return;
         }
 
+        console.log('Submitting review...');
+        console.log('Place ID:', placeId);
+        console.log('Rating:', rating);
+        console.log('Review:', reviewText);
+
         const success = await submitReview(
             token,
             placeId,
@@ -495,12 +503,11 @@ function setupReviewForm() {
 
         if (success) {
             reviewForm.reset();
+
+            alert('Review submitted successfully!');
+
+            window.location.href =
+                `place.html?id=${placeId}`;
         }
     });
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('review-form')) {
-        setupReviewForm();
-    }
-});
