@@ -1,4 +1,4 @@
-```javascript
+
 const API_URL =
     'https://web-5000-77-207.cod-eu-west-3.hbtn.io/api/v1';
 
@@ -623,4 +623,3 @@ function setupReviewForm(form) {
         }
     );
 }
-```
