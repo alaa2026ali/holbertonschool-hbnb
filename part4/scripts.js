@@ -204,209 +204,33 @@ document.addEventListener('DOMContentLoaded', () => {
 /* Display Places */
 
 function displayPlaces(places) {
-
-    const list =
-        document.getElementById(
-            'places-list'
-        );
-
-    if (!list) {
-        return;
-    }
+    const list = document.getElementById('places-list');
 
     list.innerHTML = '';
 
+    const images = [
+        'images/Riyadh.png',
+        'images/Jeddah Beach House.png',
+        'images/AlUla Desert Villa.png'
+    ];
 
-    const images = {
-
-        "Riyadh Luxury Apartment":
-            "images/Riyadh.png",
-
-        "Jeddah Beach House":
-            "images/Jeddah Beach House.png",
-
-        "AlUla Desert Villa":
-            "images/AlUla Desert Villa.png"
-    };
-
-
-    places.forEach(place => {
-
+    places.forEach((place, index) => {
         list.innerHTML += `
-            <article
-                class="place-card"
-                data-price="${place.price}"
-            >
+            <article class="place-card" data-price="${place.price}">
+                <img src="${images[index]}" alt="${place.title}">
 
-                <img
-                    src="${images[place.title]}"
-                    alt="${place.title}"
-                >
+                <h2>${place.title}</h2>
 
-                <h2>
-                    ${place.title}
-                </h2>
+                <p>Price per night: $${place.price}</p>
 
-                <p>
-                    Price per night:
-                    $${place.price}
-                </p>
+                <p>${place.description}</p>
 
-                <p>
-                    ${place.description}
-                </p>
-
-                <a
-                    href="place.html?id=${place.id}"
-                    class="details-button"
-                >
+                <a href="place.html?id=${place.id}" class="details-button">
                     View Details
                 </a>
-
             </article>
         `;
     });
-}
-
-
-/* Price Filter */
-
-function setupPriceFilter() {
-
-    const filter =
-        document.getElementById(
-            'price-filter'
-        );
-
-    if (!filter) {
-        return;
-    }
-
-
-    [10, 50, 100, 'All'].forEach(
-        price => {
-
-            const option =
-                document.createElement(
-                    'option'
-                );
-
-            option.value = price;
-
-            option.textContent =
-                price === 'All'
-                    ? 'All'
-                    : `$${price}`;
-
-            filter.appendChild(option);
-        }
-    );
-
-
-    filter.addEventListener(
-        'change',
-        () => {
-
-            document
-                .querySelectorAll(
-                    '.place-card'
-                )
-                .forEach(card => {
-
-                    const price =
-                        parseFloat(
-                            card.dataset.price
-                        );
-
-                    card.style.display =
-                        filter.value === 'All' ||
-                        price <=
-                        parseFloat(
-                            filter.value
-                        )
-                            ? 'block'
-                            : 'none';
-                });
-        }
-    );
-}
-
-
-/* Place Details */
-
-function displayPlace(place) {
-
-    document.getElementById(
-        'place-details'
-    ).innerHTML = `
-
-        <h1>
-            ${place.title}
-        </h1>
-
-        <p>
-            <strong>Price:</strong>
-            $${place.price}
-        </p>
-
-        <p>
-            <strong>Description:</strong>
-            ${place.description}
-        </p>
-
-        <p>
-            <strong>Amenities:</strong>
-        </p>
-
-        <ul>
-            ${
-                place.amenities?.length
-                    ? place.amenities
-                        .map(
-                            a =>
-                                `<li>
-                                    ${a.name || a}
-                                </li>`
-                        )
-                        .join('')
-                    : '<li>No amenities listed</li>'
-            }
-        </ul>
-    `;
-}
-
-
-/* Reviews */
-
-async function fetchReviews(
-    placeId,
-    token
-) {
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_URL}/places/${placeId}/reviews`,
-                {
-                    headers: token
-                        ? {
-                            Authorization:
-                                `Bearer ${token}`
-                        }
-                        : {}
-                }
-            );
-
-        const reviews =
-            await response.json();
-
-        displayReviews(reviews);
-
-    } catch (error) {
-
-        console.error(error);
-    }
 }
 
 
