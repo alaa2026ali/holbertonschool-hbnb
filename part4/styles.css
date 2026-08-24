@@ -59,13 +59,15 @@ main {
 
 /* Places */
 
-#places-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+.place-card {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
 }
 
 .place-card img {
+    display: block;
     width: 100%;
     height: 160px;
     object-fit: cover;
