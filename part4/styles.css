@@ -23,6 +23,12 @@ nav {
     align-items: center;
 }
 
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 .logo {
     width: 100px;
 }
@@ -34,7 +40,6 @@ nav {
     text-decoration: none;
     border-radius: 5px;
 }
-
 /* Main */
 
 main {
