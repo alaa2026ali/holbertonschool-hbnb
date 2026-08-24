@@ -5,381 +5,163 @@
     font-family: Arial, sans-serif;
 }
 
-html {
-    scroll-behavior: smooth;
-}
-
 body {
-    background-color: #f7f7f7;
+    background-color: #f5f5f5;
     color: #333;
-    line-height: 1.6;
 }
 
-/* =========================
-   NAVBAR
-========================= */
+/* Header */
 
 header {
-    background-color: #ffffff;
-    padding: 14px 5%;
-    border-bottom: 1px solid #e5e5e5;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    background-color: #333;
+    padding: 15px 30px;
 }
 
-.navbar {
+nav {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: auto;
-}
-
-.brand {
-    display: flex;
     align-items: center;
 }
 
 .logo {
-    width: 120px;
-    height: auto;
-}
-
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-}
-
-.nav-link {
-    color: #333;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s ease;
-}
-
-.nav-link:hover,
-.nav-link.active {
-    color: #e74c3c;
+    width: 100px;
 }
 
 .login-button {
     background-color: #e74c3c;
-    color: #fff !important;
-    padding: 10px 22px;
-    border-radius: 25px;
+    color: white;
+    padding: 10px 20px;
     text-decoration: none;
-    font-weight: bold;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    border-radius: 5px;
 }
 
-.login-button:hover {
-    background-color: #c0392b;
-    transform: translateY(-2px);
-}
+/* Main */
 
-/* =========================
-   HERO
-========================= */
-
-.hero {
-    min-height: 420px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 60px 20px;
-    background: linear-gradient(
-        135deg,
-        #fff5f3,
-        #f8eeee
-    );
-}
-
-.hero-content {
-    max-width: 750px;
-    animation: fadeIn 0.8s ease;
-}
-
-.hero h1 {
-    font-size: 48px;
-    margin-bottom: 15px;
-    color: #222;
-}
-
-.hero p {
-    font-size: 19px;
-    color: #666;
-    margin-bottom: 30px;
-}
-
-.hero-button {
-    display: inline-block;
-    background-color: #e74c3c;
-    color: #fff;
-    text-decoration: none;
-    padding: 14px 30px;
-    border-radius: 30px;
-    font-weight: bold;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hero-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-/* =========================
-   PLACES SECTION
-========================= */
-
-.places-section {
-    max-width: 1200px;
-    margin: auto;
-    padding: 60px 20px;
-}
-
-.section-heading {
-    text-align: center;
-    margin-bottom: 35px;
-}
-
-.section-heading h2 {
-    font-size: 32px;
-    color: #222;
-    margin-bottom: 8px;
-}
-
-.section-heading p {
-    color: #777;
-}
-
-/* =========================
-   FILTER
-========================= */
-
-.filter-box {
-    max-width: 350px;
-    margin: 0 auto 35px;
-    background-color: #fff;
+main {
+    max-width: 1000px;
+    margin: 30px auto;
     padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
 }
 
-.filter-box label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
+/* Filter */
+
+#filter {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 25px;
+    border-radius: 5px;
 }
 
-.filter-box select {
-    margin: 0;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #fff;
+#price-filter {
+    padding: 8px;
+    margin-left: 10px;
 }
 
-/* =========================
-   PLACES GRID
-========================= */
+/* Places */
 
 #places-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
 }
-
-/* =========================
-   PLACE CARD
-========================= */
 
 .place-card {
-    margin: 0;
-    padding: 24px;
-    border: 1px solid #e8e8e8;
-    border-radius: 18px;
-    background-color: #fff;
-    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    animation: cardAppear 0.5s ease;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
 
-.place-card:hover {
-    transform: translateY(-7px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-}
-
-.place-card h2,
-.place-card h3 {
+.place-card h2 {
     margin-bottom: 10px;
-    color: #222;
 }
 
 .place-card p {
+    margin-bottom: 10px;
     color: #666;
-    margin-bottom: 8px;
 }
 
-/* =========================
-   BUTTONS
-========================= */
+/* Buttons */
 
-.details-button {
+.details-button,
+button {
     display: inline-block;
-    margin-top: 12px;
-    padding: 11px 20px;
-    background-color: #333;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 25px;
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.details-button:hover {
     background-color: #e74c3c;
-    transform: translateY(-2px);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
 }
 
-/* =========================
-   REVIEWS
-========================= */
-
-.review-card {
-    margin: 15px 0;
-    padding: 20px;
-    border: 1px solid #e8e8e8;
-    border-radius: 15px;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-/* =========================
-   FORMS
-========================= */
+/* Forms */
 
 form {
-    max-width: 500px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: #fff;
-    border-radius: 18px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    max-width: 450px;
+    margin: 50px auto;
+    background-color: white;
+    padding: 25px;
+    border-radius: 5px;
 }
 
 input,
 textarea,
 select {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
+    margin: 8px 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Place Details */
+
+#place-details {
+    background-color: white;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 5px;
+}
+
+#place-details p {
     margin: 10px 0;
+}
+
+#place-details li {
+    margin: 5px 0 5px 20px;
+}
+
+/* Reviews */
+
+#reviews {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.review-card {
     border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 15px;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 5px;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
-    outline: none;
-    border-color: #e74c3c;
-    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
-}
-
-button {
-    padding: 12px 22px;
-    border: none;
-    border-radius: 25px;
-    background-color: #e74c3c;
-    color: #fff;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #c0392b;
-    transform: translateY(-2px);
-}
-
-/* =========================
-   FOOTER
-========================= */
+/* Footer */
 
 footer {
+    background-color: #333;
+    color: white;
     text-align: center;
-    padding: 30px 20px;
-    margin-top: 30px;
-    background-color: #222;
-    color: #fff;
+    padding: 20px;
+    margin-top: 40px;
 }
 
-.footer-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
+/* Mobile */
 
-.footer-logo {
-    width: 90px;
-    filter: brightness(0) invert(1);
-}
-
-/* =========================
-   ANIMATIONS
-========================= */
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes cardAppear {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 768px) {
-
-    .nav-links {
-        gap: 10px;
-    }
-
-    .nav-link {
-        display: none;
-    }
-
-    .hero h1 {
-        font-size: 36px;
-    }
-
-    .hero p {
-        font-size: 16px;
-    }
-
-    .places-section {
-        padding: 40px 15px;
+@media (max-width: 600px) {
+    main {
+        padding: 10px;
     }
 
     #places-list {
