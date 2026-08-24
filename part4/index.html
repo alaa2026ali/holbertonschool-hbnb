@@ -1,38 +1,84 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>List of Places</title>
+    <title>HBnB - Find Your Perfect Stay</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
+
     <header>
-        <nav>
-            <a href="index.html">
+        <nav class="navbar">
+            <a href="index.html" class="brand">
                 <img src="images/logo.png" alt="HBnB Logo" class="logo">
             </a>
-            <a href="login.html" id="login-link" class="login-button">Login</a>
+
+            <div class="nav-links">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="#places-list" class="nav-link">Places</a>
+                <a href="login.html" id="login-link" class="login-button">
+                    Login
+                </a>
+            </div>
         </nav>
     </header>
 
     <main>
-        <section id="filter">
-            <label for="price-filter">Max Price:</label>
-            <select id="price-filter">
-                <!-- Options will be populated dynamically -->
-            </select>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Find Your Perfect Stay</h1>
+                <p>
+                    Discover comfortable places and make your next stay
+                    unforgettable.
+                </p>
+
+                <a href="#places-list" class="hero-button">
+                    Explore Places
+                </a>
+            </div>
         </section>
 
-        <section id="places-list">
-            <!-- List of places will be populated dynamically -->
+        <!-- Places Section -->
+        <section class="places-section">
+
+            <div class="section-heading">
+                <h2>Available Places</h2>
+                <p>Explore our available places and find the one that suits you.</p>
+            </div>
+
+            <!-- Price Filter -->
+            <div id="filter" class="filter-box">
+                <label for="price-filter">Maximum Price</label>
+
+                <select id="price-filter">
+                    <!-- Options will be populated dynamically -->
+                </select>
+            </div>
+
+            <!-- Places populated by JavaScript -->
+            <section id="places-list">
+                <!-- List of places will be populated dynamically -->
+            </section>
+
         </section>
+
     </main>
 
     <footer>
-        <p>&copy; 2026 HBnB. All rights reserved.</p>
+        <div class="footer-content">
+            <img src="images/logo.png" alt="HBnB Logo" class="footer-logo">
+
+            <p>&copy; 2026 HBnB. All rights reserved.</p>
+        </div>
     </footer>
 
     <script src="scripts.js"></script>
+
 </body>
 </html>
+```
