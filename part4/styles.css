@@ -10,8 +10,6 @@ body {
     color: #333;
 }
 
-/* Header */
-
 header {
     background-color: #333;
     padding: 15px 30px;
@@ -26,7 +24,10 @@ nav {
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 15px;
+}
+
+.nav-links .login-button:first-child {
+    margin-right: 20px;
 }
 
 .logo {
@@ -34,21 +35,23 @@ nav {
 }
 
 .login-button {
+    display: inline-block;
     background-color: #e74c3c;
     color: white;
     padding: 10px 20px;
     text-decoration: none;
     border-radius: 5px;
 }
-/* Main */
+
+.login-button:hover {
+    background-color: #c0392b;
+}
 
 main {
     max-width: 1000px;
     margin: 30px auto;
     padding: 20px;
 }
-
-/* Filter */
 
 #filter {
     background-color: white;
@@ -62,7 +65,11 @@ main {
     margin-left: 10px;
 }
 
-/* Places */
+#places-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
 
 .place-card {
     background-color: white;
@@ -74,14 +81,10 @@ main {
 .place-card img {
     display: block;
     width: 100%;
-    height: 160px;
+    height: 180px;
     object-fit: cover;
     border-radius: 8px;
     margin-bottom: 12px;
-}
-
-.place-card:hover img {
-    transform: scale(1.02);
 }
 
 .place-card h2 {
@@ -92,8 +95,6 @@ main {
     margin-bottom: 10px;
     color: #666;
 }
-
-/* Buttons */
 
 .details-button,
 button {
@@ -107,7 +108,10 @@ button {
     cursor: pointer;
 }
 
-/* Forms */
+.details-button:hover,
+button:hover {
+    background-color: #c0392b;
+}
 
 form {
     max-width: 450px;
@@ -127,13 +131,21 @@ select {
     border-radius: 4px;
 }
 
-/* Place Details */
-
 #place-details {
     background-color: white;
     padding: 25px;
     margin-bottom: 25px;
     border-radius: 5px;
+}
+
+.place-image {
+    display: block;
+    width: 100%;
+    max-width: 700px;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 0 auto 20px;
 }
 
 #place-details p {
@@ -143,8 +155,6 @@ select {
 #place-details li {
     margin: 5px 0 5px 20px;
 }
-
-/* Reviews */
 
 #reviews {
     background-color: white;
@@ -159,7 +169,16 @@ select {
     border-radius: 5px;
 }
 
-/* Footer */
+#add-review {
+    background-color: white;
+    padding: 20px;
+    margin-top: 25px;
+    border-radius: 5px;
+}
+
+#add-review h2 {
+    margin-bottom: 15px;
+}
 
 footer {
     background-color: #333;
@@ -169,14 +188,17 @@ footer {
     margin-top: 40px;
 }
 
-/* Mobile */
+@media (max-width: 700px) {
 
-@media (max-width: 600px) {
     main {
         padding: 10px;
     }
 
     #places-list {
         grid-template-columns: 1fr;
+    }
+
+    .nav-links .login-button:first-child {
+        margin-right: 10px;
     }
 }
