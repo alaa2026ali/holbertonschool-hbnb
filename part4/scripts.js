@@ -56,6 +56,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
+    /* Add Review Link */
+
+    const addReviewLink =
+        document.getElementById('add-review-link');
+
+    if (addReviewLink) {
+
+        const placeId =
+            getPlaceId();
+
+        if (placeId) {
+
+            addReviewLink.href =
+                `add_review.html?id=${placeId}`;
+        }
+    }
+
+
     /* Review */
 
     const reviewForm =
@@ -85,22 +103,23 @@ function setupLogin(form) {
 
         try {
 
-            const response = await fetch(
-                `${API_URL}/auth/login`,
-                {
-                    method: 'POST',
+            const response =
+                await fetch(
+                    `${API_URL}/auth/login`,
+                    {
+                        method: 'POST',
 
-                    headers: {
-                        'Content-Type':
-                            'application/json'
-                    },
+                        headers: {
+                            'Content-Type':
+                                'application/json'
+                        },
 
-                    body: JSON.stringify({
-                        email: email,
-                        password: password
-                    })
-                }
-            );
+                        body: JSON.stringify({
+                            email: email,
+                            password: password
+                        })
+                    }
+                );
 
             const data =
                 await response.json();
@@ -141,10 +160,14 @@ async function fetchPlaces() {
     try {
 
         const response =
-            await fetch(`${API_URL}/places/`);
+            await fetch(
+                `${API_URL}/places/`
+            );
 
         if (!response.ok) {
-            throw new Error('Failed to load places');
+            throw new Error(
+                'Failed to load places'
+            );
         }
 
         const places =
@@ -165,7 +188,9 @@ async function fetchPlaces() {
 function displayPlaces(places) {
 
     const list =
-        document.getElementById('places-list');
+        document.getElementById(
+            'places-list'
+        );
 
     if (!list) return;
 
@@ -182,6 +207,7 @@ function displayPlaces(places) {
             "images/AlUla Desert Villa.png"
     };
 
+
     places.forEach(place => {
 
         const image =
@@ -189,6 +215,7 @@ function displayPlaces(places) {
             "images/Riyadh.png";
 
         list.innerHTML += `
+
             <article
                 class="place-card"
                 data-price="${place.price}"
@@ -199,7 +226,9 @@ function displayPlaces(places) {
                     alt="${place.title}"
                 >
 
-                <h2>${place.title}</h2>
+                <h2>
+                    ${place.title}
+                </h2>
 
                 <p>
                     Price per night:
@@ -218,6 +247,7 @@ function displayPlaces(places) {
                 </a>
 
             </article>
+
         `;
     });
 }
@@ -230,7 +260,9 @@ function displayPlaces(places) {
 function setupPriceFilter() {
 
     const filter =
-        document.getElementById('price-filter');
+        document.getElementById(
+            'price-filter'
+        );
 
     if (!filter) return;
 
@@ -246,7 +278,9 @@ function setupPriceFilter() {
     prices.forEach(price => {
 
         const option =
-            document.createElement('option');
+            document.createElement(
+                'option'
+            );
 
         option.value = price;
 
@@ -268,26 +302,37 @@ function setupPriceFilter() {
 function filterPlaces() {
 
     const filter =
-        document.getElementById('price-filter');
+        document.getElementById(
+            'price-filter'
+        );
 
     const selected =
         filter.value;
 
     const cards =
-        document.querySelectorAll('.place-card');
+        document.querySelectorAll(
+            '.place-card'
+        );
 
     cards.forEach(card => {
 
         const price =
-            parseFloat(card.dataset.price);
+            parseFloat(
+                card.dataset.price
+            );
 
         if (
             selected === 'All' ||
             price <= parseFloat(selected)
         ) {
-            card.style.display = 'block';
+
+            card.style.display =
+                'block';
+
         } else {
-            card.style.display = 'none';
+
+            card.style.display =
+                'none';
         }
     });
 }
@@ -317,7 +362,10 @@ async function loadPlace() {
             );
 
         if (!response.ok) {
-            throw new Error('Place not found');
+
+            throw new Error(
+                'Place not found'
+            );
         }
 
         const place =
@@ -334,15 +382,10 @@ async function loadPlace() {
 
         console.error(error);
 
-        const details =
-            document.getElementById(
-                'place-details'
-            );
-
-        if (details) {
-            details.innerHTML =
-                '<p>Place not found.</p>';
-        }
+        document.getElementById(
+            'place-details'
+        ).innerHTML =
+            '<p>Place not found.</p>';
     }
 }
 
@@ -356,30 +399,11 @@ function displayPlace(place) {
 
     if (!details) return;
 
-    const images = {
-        "Riyadh Luxury Apartment":
-            "images/Riyadh.png",
-
-        "Jeddah Beach House":
-            "images/Jeddah Beach House.png",
-
-        "AlUla Desert Villa":
-            "images/AlUla Desert Villa.png"
-    };
-
-    const image =
-        images[place.title] ||
-        "images/Riyadh.png";
-
     details.innerHTML = `
 
-        <img
-            src="${image}"
-            alt="${place.title}"
-            class="place-image"
-        >
-
-        <h1>${place.title}</h1>
+        <h1>
+            ${place.title}
+        </h1>
 
         <p>
             <strong>Price:</strong>
@@ -396,18 +420,26 @@ function displayPlace(place) {
         </p>
 
         <ul>
+
             ${
                 place.amenities &&
                 place.amenities.length
+
                     ? place.amenities
-                        .map(amenity =>
-                            `<li>
-                                ${amenity.name || amenity}
-                            </li>`
+                        .map(
+                            amenity =>
+                                `<li>
+                                    ${
+                                        amenity.name ||
+                                        amenity
+                                    }
+                                </li>`
                         )
                         .join('')
+
                     : '<li>No amenities listed</li>'
             }
+
         </ul>
 
     `;
@@ -428,6 +460,7 @@ async function fetchReviews(
         const headers = {};
 
         if (token) {
+
             headers.Authorization =
                 `Bearer ${token}`;
         }
@@ -462,7 +495,9 @@ async function fetchReviews(
 function displayReviews(reviews) {
 
     const section =
-        document.getElementById('reviews');
+        document.getElementById(
+            'reviews'
+        );
 
     if (!section) return;
 
