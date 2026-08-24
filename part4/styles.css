@@ -65,11 +65,16 @@ main {
     gap: 20px;
 }
 
-.place-card {
-    background-color: white;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+.place-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.place-card:hover img {
+    transform: scale(1.02);
 }
 
 .place-card h2 {
