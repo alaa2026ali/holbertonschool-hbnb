@@ -1,3 +1,4 @@
+```javascript
 const API_URL =
     'https://web-5000-77-207.cod-eu-west-3.hbtn.io/api/v1';
 
@@ -171,16 +172,22 @@ function displayPlaces(places) {
 
     list.innerHTML = '';
 
-    const images = [
-        'images/Riyadh.png',
-        'images/Jeddah Beach House.png',
-        'images/AlUla Desert Villa.png'
-    ];
+    const images = {
+        "Riyadh Luxury Apartment":
+            "images/Riyadh.png",
 
-    places.forEach((place, index) => {
+        "Jeddah Beach House":
+            "images/Jeddah Beach House.png",
+
+        "AlUla Desert Villa":
+            "images/AlUla Desert Villa.png"
+    };
+
+    places.forEach(place => {
 
         const image =
-            images[index] || images[0];
+            images[place.title] ||
+            "images/Riyadh.png";
 
         list.innerHTML += `
             <article
@@ -328,10 +335,15 @@ async function loadPlace() {
 
         console.error(error);
 
-        document.getElementById(
-            'place-details'
-        ).innerHTML =
-            '<p>Place not found.</p>';
+        const details =
+            document.getElementById(
+                'place-details'
+            );
+
+        if (details) {
+            details.innerHTML =
+                '<p>Place not found.</p>';
+        }
     }
 }
 
@@ -345,7 +357,28 @@ function displayPlace(place) {
 
     if (!details) return;
 
+    const images = {
+        "Riyadh Luxury Apartment":
+            "images/Riyadh.png",
+
+        "Jeddah Beach House":
+            "images/Jeddah Beach House.png",
+
+        "AlUla Desert Villa":
+            "images/AlUla Desert Villa.png"
+    };
+
+    const image =
+        images[place.title] ||
+        "images/Riyadh.png";
+
     details.innerHTML = `
+
+        <img
+            src="${image}"
+            alt="${place.title}"
+            class="place-image"
+        >
 
         <h1>${place.title}</h1>
 
@@ -590,3 +623,4 @@ function setupReviewForm(form) {
         }
     );
 }
+```
