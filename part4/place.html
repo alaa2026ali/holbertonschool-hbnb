@@ -1,247 +1,96 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-}
+<!DOCTYPE html>
+<html lang="en">
 
-body {
-    background-color: #f5f5f5;
-    color: #333;
-}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-/* Header */
+    <title>Place Details</title>
 
-header {
-    background-color: #333;
-    padding: 15px 30px;
-}
+    <link rel="stylesheet" href="styles.css">
+</head>
 
-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+<body>
 
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+    <header>
+        <nav>
+            <a href="index.html">
+                <img
+                    src="images/logo.png"
+                    alt="HBnB Logo"
+                    class="logo"
+                >
+            </a>
 
-.logo {
-    width: 100px;
-}
+            <a
+                href="login.html"
+                class="login-button"
+            >
+                Login
+            </a>
+        </nav>
+    </header>
 
-.login-button {
-    background-color: #e74c3c;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-}
 
-.login-button:hover {
-    background-color: #c0392b;
-}
+    <main>
 
-/* Main */
+        <section
+            id="place-details"
+            class="place-details"
+        >
+            <p>Loading place...</p>
+        </section>
 
-main {
-    max-width: 1000px;
-    margin: 30px auto;
-    padding: 20px;
-}
 
-/* Filter */
+        <section id="reviews">
 
-#filter {
-    background-color: white;
-    padding: 15px;
-    margin-bottom: 25px;
-    border-radius: 5px;
-}
+            <h2>Reviews</h2>
 
-#price-filter {
-    padding: 8px;
-    margin-left: 10px;
-}
+            <p>No reviews yet.</p>
 
-/* Places */
+        </section>
 
-#places-list {
-    display: grid;
-    grid-template-columns:
-        repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-}
 
-.place-card {
-    background-color: white;
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-}
+        <section id="add-review">
 
-.place-card img {
-    display: block;
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 12px;
-}
+            <h2>Add a Review</h2>
 
-.place-card:hover img {
-    transform: scale(1.02);
-}
+            <a
+                id="add-review-link"
+                href="#"
+                class="details-button"
+            >
+                Add a Review
+            </a>
 
-.place-card h2 {
-    margin-bottom: 10px;
-}
+        </section>
 
-.place-card p {
-    margin-bottom: 10px;
-    color: #666;
-}
 
-/* Buttons */
+        <div class="back-container">
 
-.details-button,
-button {
-    display: inline-block;
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    text-decoration: none;
-    cursor: pointer;
-}
+            <a
+                href="index.html"
+                class="back-button"
+            >
+                Back to Home
+            </a>
 
-.details-button:hover,
-button:hover {
-    background-color: #c0392b;
-}
+        </div>
 
-/* Forms */
+    </main>
 
-form {
-    max-width: 450px;
-    margin: 50px auto;
-    background-color: white;
-    padding: 25px;
-    border-radius: 5px;
-}
 
-input,
-textarea,
-select {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
+    <footer>
 
-/* Place Details */
+        <p>
+            &copy; 2026 HBnB. All rights reserved.
+        </p>
 
-#place-details {
-    background-color: white;
-    padding: 25px;
-    margin-bottom: 25px;
-    border-radius: 5px;
-}
+    </footer>
 
-#place-details h1 {
-    margin-bottom: 20px;
-}
 
-#place-details p {
-    margin: 10px 0;
-}
+    <script src="scripts.js"></script>
 
-#place-details li {
-    margin: 5px 0 5px 20px;
-}
+</body>
 
-/* Reviews */
-
-#reviews {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    margin-bottom: 25px;
-}
-
-#reviews h2 {
-    margin-bottom: 15px;
-}
-
-.review-card {
-    border: 1px solid #ddd;
-    padding: 15px;
-    margin-top: 15px;
-    border-radius: 5px;
-}
-
-/* Add Review */
-
-#add-review {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    margin-bottom: 25px;
-}
-
-#add-review h2 {
-    margin-bottom: 15px;
-}
-
-/* Back Button */
-
-.back-container {
-    text-align: center;
-    margin-top: 25px;
-}
-
-.back-button {
-    display: inline-block;
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.back-button:hover {
-    background-color: #555;
-}
-
-/* Footer */
-
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 20px;
-    margin-top: 40px;
-}
-
-/* Mobile */
-
-@media (max-width: 600px) {
-
-    main {
-        padding: 10px;
-    }
-
-    #places-list {
-        grid-template-columns: 1fr;
-    }
-
-    .place-card img {
-        height: 180px;
-    }
-}
+</html>
