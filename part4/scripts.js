@@ -206,18 +206,23 @@ document.addEventListener('DOMContentLoaded', () => {
 function displayPlaces(places) {
     const list = document.getElementById('places-list');
 
+    if (!list) return;
+
     list.innerHTML = '';
 
-    const images = [
-        'images/Riyadh.png',
-        'images/Jeddah Beach House.png',
-        'images/AlUla Desert Villa.png'
-    ];
+    const images = {
+        "Riyadh": "images/Riyadh.png",
+        "Jeddah Beach House": "images/Jeddah Beach House.png",
+        "AlUla Desert Villa": "images/AlUla Desert Villa.png"
+    };
 
-    places.forEach((place, index) => {
+    places.forEach(place => {
+        const image = images[place.title] || "images/Riyadh.png";
+
         list.innerHTML += `
             <article class="place-card" data-price="${place.price}">
-                <img src="${images[index]}" alt="${place.title}">
+
+                <img src="${image}" alt="${place.title}">
 
                 <h2>${place.title}</h2>
 
@@ -228,59 +233,6 @@ function displayPlaces(places) {
                 <a href="place.html?id=${place.id}" class="details-button">
                     View Details
                 </a>
-            </article>
-        `;
-    });
-}
-
-
-/* Display Reviews */
-
-function displayReviews(reviews) {
-
-    const section =
-        document.getElementById(
-            'reviews'
-        );
-
-    if (!section) {
-        return;
-    }
-
-    section.innerHTML =
-        '<h2>Reviews</h2>';
-
-
-    if (!reviews.length) {
-
-        section.innerHTML +=
-            '<p>No reviews yet.</p>';
-
-        return;
-    }
-
-
-    reviews.forEach(review => {
-
-        section.innerHTML += `
-
-            <article
-                class="review-card"
-            >
-
-                <p>
-                    <strong>User:</strong>
-                    ${review.user_id}
-                </p>
-
-                <p>
-                    ${review.text}
-                </p>
-
-                <p>
-                    Rating:
-                    ${review.rating}/5
-                </p>
 
             </article>
         `;
