@@ -1,5 +1,5 @@
 const API_URL =
-    'https://web-5000-57-59.cod-eu-west-3.hbtn.io/api/v1';
+    'https://web-5000-47-42.cod-eu-west-3.hbtn.io/api/v1';
 
 
 function getCookie(name) {
